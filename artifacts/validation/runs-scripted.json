@@ -1,0 +1,2037 @@
+{
+  "at": "2026-11-20T09:54:32.415Z",
+  "live": false,
+  "realtime": false,
+  "reports": [
+    {
+      "id": "env-01",
+      "domain": "環境",
+      "question": "経済発展のために森林を切り開き、大型商業施設を建設するべきか？",
+      "mode": "scripted",
+      "model": "scripted:forest-v1 (hand-written, no model call)",
+      "elapsedMs": 2,
+      "outputChars": 3742,
+      "estTokens": 3460,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの地域で暮らす人 / まだ生まれていない世代 / その斜面に依存する生物"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 28 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 6 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 8 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 36,
+        "byKind": {
+          "verified": 8,
+          "inference": 10,
+          "hypothetical": 12,
+          "unknown": 6
+        },
+        "citationsChecked": 28,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "jp-forest-white-paper",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-multifunction",
+          "ipbes-global-assessment",
+          "jp-forest-sink-target",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:forest-v1 (hand-written, no model call)",
+        "elapsedMs": 2
+      }
+    },
+    {
+      "id": "env-02",
+      "domain": "環境",
+      "question": "市街地の街路樹を減らして道路を拡幅するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3043,
+      "estTokens": 2806,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "mlit-street-tree-surface-temp",
+          "jp-forest-white-paper",
+          "jp-forest-multifunction",
+          "env-heat-guideline",
+          "jp-ghg-inventory-lulucf",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "env-03",
+      "domain": "環境",
+      "question": "河川の堤防を高くするために、河畔林を伐採するべきか？",
+      "mode": "scripted",
+      "model": "scripted:forest-v1 (hand-written, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3742,
+      "estTokens": 3460,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの地域で暮らす人 / まだ生まれていない世代 / その斜面に依存する生物"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 28 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 6 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 8 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 36,
+        "byKind": {
+          "verified": 8,
+          "inference": 10,
+          "hypothetical": 12,
+          "unknown": 6
+        },
+        "citationsChecked": 28,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "jp-forest-white-paper",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-multifunction",
+          "ipbes-global-assessment",
+          "jp-forest-sink-target",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:forest-v1 (hand-written, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "env-04",
+      "domain": "環境",
+      "question": "使用済み太陽光パネルの処理費用を、いまの電気料金に上乗せするべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3105,
+      "estTokens": 2890,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 36 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 6 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 14 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 14,
+          "inference": 8,
+          "hypothetical": 12,
+          "unknown": 6
+        },
+        "citationsChecked": 36,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "eu-citizens-panel-intergenerational",
+          "jp-forest-multifunction",
+          "mlit-street-tree-surface-temp",
+          "tkfd-future-generations",
+          "mit-future-you",
+          "stanford-pacs-ai-voice"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "ene-01",
+      "domain": "エネルギー",
+      "question": "電力需要の増加に対応するため、地域に大型データセンターを誘致するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3057,
+      "estTokens": 2852,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "ipbes-global-assessment",
+          "cfg-eu-intergenerational",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "ene-02",
+      "domain": "エネルギー",
+      "question": "老朽化した火力発電所を延命するべきか、閉鎖して電力を他地域から購入するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3116,
+      "estTokens": 2888,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-white-paper",
+          "ipbes-global-assessment",
+          "ipbes-spm-unccd",
+          "jp-forest-multifunction",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "ene-03",
+      "domain": "エネルギー",
+      "question": "洋上風力発電を導入するために、漁業権を一部制限するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3085,
+      "estTokens": 2853,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 38 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 38,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-forest-multifunction",
+          "stanford-pacs-ai-voice",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-white-paper",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "ene-04",
+      "domain": "エネルギー",
+      "question": "原子力発電所の運転期間を60年に延長するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3034,
+      "estTokens": 2788,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 38 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 38,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-white-paper",
+          "jp-forest-sink-target",
+          "jp-forest-multifunction",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "urb-01",
+      "domain": "都市開発",
+      "question": "人口減少地域の路線バスを維持するべきか、廃止して需要応答型交通に切り替えるべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3111,
+      "estTokens": 2876,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "ipbes-global-assessment",
+          "mlit-street-tree-surface-temp",
+          "ipbes-spm-unccd",
+          "jp-forest-white-paper",
+          "mlit-green-cover-temperature",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "urb-02",
+      "domain": "都市開発",
+      "question": "築50年の公民館を建て替えるべきか、近隣施設に統合するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3125,
+      "estTokens": 2888,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 30 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 6 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 14 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 14,
+          "inference": 8,
+          "hypothetical": 12,
+          "unknown": 6
+        },
+        "citationsChecked": 30,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-forest-white-paper",
+          "mlit-green-cover-temperature",
+          "eu-citizens-panel-intergenerational",
+          "jp-ghg-inventory-lulucf",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "urb-03",
+      "domain": "都市開発",
+      "question": "中心市街地の平面駐車場を、公園と緑地に転用するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3108,
+      "estTokens": 2892,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 38 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 38,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "mlit-street-tree-surface-temp",
+          "mlit-green-cover-temperature",
+          "env-heat-guideline",
+          "ipbes-global-assessment",
+          "jp-forest-white-paper",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "urb-04",
+      "domain": "都市開発",
+      "question": "浸水リスクの高い地域で、被災した住宅の同じ場所での再建を認めるべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3051,
+      "estTokens": 2853,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "ipbes-global-assessment",
+          "jp-forest-white-paper",
+          "jp-forest-multifunction",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "edu-01",
+      "domain": "教育",
+      "question": "児童数の減少を理由に、小中学校の統廃合を進めるべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3101,
+      "estTokens": 2859,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 32 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 32,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-forest-white-paper",
+          "ipbes-global-assessment",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-sink-target",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "edu-02",
+      "domain": "教育",
+      "question": "学校の授業で、生成AIの利用を全面的に認めるべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3212,
+      "estTokens": 2973,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "mit-future-you",
+          "stanford-pacs-ai-voice",
+          "jp-forest-white-paper",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-multifunction"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "edu-03",
+      "domain": "教育",
+      "question": "大学の授業料を無償化し、その財源を将来世代の税で賄うべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3118,
+      "estTokens": 2941,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 38 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 38,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "tkfd-future-generations",
+          "stanford-pacs-ai-voice",
+          "eu-citizens-panel-intergenerational",
+          "ipbes-global-assessment",
+          "mlit-green-cover-temperature",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "edu-04",
+      "domain": "教育",
+      "question": "教員の人数を維持するために、一学級あたりの児童数を増やすべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3195,
+      "estTokens": 2967,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 27 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 6 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 14 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 14,
+          "inference": 8,
+          "hypothetical": 12,
+          "unknown": 6
+        },
+        "citationsChecked": 27,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "stanford-pacs-ai-voice",
+          "jp-forest-white-paper",
+          "ipbes-spm-unccd",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "eco-01",
+      "domain": "経済政策",
+      "question": "国債を増発して、いまの社会保障の水準を維持するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3019,
+      "estTokens": 2793,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-multifunction",
+          "tkfd-future-generations",
+          "jp-forest-white-paper",
+          "cfg-eu-intergenerational",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    },
+    {
+      "id": "eco-02",
+      "domain": "経済政策",
+      "question": "地方への交付金を、人口減少が進む地域に集中させるべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3120,
+      "estTokens": 2901,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-forest-white-paper",
+          "ipbes-global-assessment",
+          "jp-ghg-inventory-lulucf",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "eco-03",
+      "domain": "経済政策",
+      "question": "企業への脱炭素規制を今すぐ強化するべきか、10年かけて段階的に導入するべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 0,
+      "outputChars": 3050,
+      "estTokens": 2827,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 35 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 35,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-sink-target",
+          "eu-citizens-panel-intergenerational",
+          "cfg-eu-intergenerational",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "id": "eco-04",
+      "domain": "経済政策",
+      "question": "上下水道の更新費用を、いまの利用者の料金値上げで賄うべきか？",
+      "mode": "scripted",
+      "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+      "elapsedMs": 1,
+      "outputChars": 3025,
+      "estTokens": 2799,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "2050年にこの決定の結果の中で暮らす人 / まだ生まれていない世代"
+        },
+        {
+          "name": "捏造出典ゼロ（全出典が解決）",
+          "pass": true,
+          "detail": "照合 41 / 削除 0"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 16 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "該当あり"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        },
+        {
+          "name": "コーパス外の問いで、地域データの欠落を明示した",
+          "pass": true,
+          "detail": "本文に欠落の明示があるか"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 40,
+        "byKind": {
+          "verified": 16,
+          "inference": 7,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 41,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "future-design-saijo",
+          "jp-forest-multifunction",
+          "tkfd-future-generations",
+          "jp-ghg-inventory-lulucf",
+          "jp-forest-white-paper",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
+        "elapsedMs": 1
+      }
+    }
+  ]
+}

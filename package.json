@@ -16,7 +16,9 @@
     "shots": "tsx scripts/capture-screenshots.mts",
     "clean": "rm -rf .next tsconfig.tsbuildinfo && find . -name '* [0-9].*' -not -path './node_modules/*' -delete",
     "predeploy": "tsx scripts/predeploy-check.mts",
-    "verify:sources": "tsx scripts/verify-sources.mts"
+    "verify:sources": "tsx scripts/verify-sources.mts",
+    "validate": "tsx scripts/validate-negative.mts && tsx scripts/validate-runs.mts",
+    "validate:live": "tsx scripts/validate-runs.mts --live --realtime"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",
