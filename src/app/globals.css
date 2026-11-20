@@ -1,0 +1,394 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * FUTURE WITNESS — design tokens
+ *
+ * The interface is a printed record, not a chat. That decision drives
+ * everything here: no border radius, no shadows, no fills except paper tone.
+ * Structure is carried by hairlines, margin width and type weight, the way a
+ * deposition or an archival register carries it. The only saturated element in
+ * the whole system is the epistemic stamp in the margin, which is the one thing
+ * a reader must never miss.
+ * ------------------------------------------------------------------ */
+
+:root {
+  --paper: #f5f2eb;
+  --paper-deep: #eee9dd;
+  --paper-sunk: #e6e0d1;
+  --ink: #252923;
+  --ink-soft: #4a5043;
+  --ink-faint: #8a8f81;
+  --olive: #737d69;
+  --gold: #b4a17b;
+  --rule: #d9d2c2;
+  --rule-strong: #c2b9a4;
+
+  /* Epistemic semantics reuse the palette; no new hues are introduced. */
+  --kind-verified: var(--olive);
+  --kind-inference: var(--ink-soft);
+  --kind-hypothetical: var(--gold);
+  --kind-unknown: var(--ink-faint);
+
+  --measure: 34rem;
+  --gutter: 1rem;
+}
+
+:root[data-theme="dark"] {
+  --paper: #1a1d18;
+  --paper-deep: #151813;
+  --paper-sunk: #23261f;
+  --ink: #e9e5db;
+  --ink-soft: #b6b3a6;
+  --ink-faint: #7b7f72;
+  --olive: #97a28b;
+  --gold: #c9b68e;
+  --rule: #343830;
+  --rule-strong: #4a4f44;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1a1d18;
+    --paper-deep: #151813;
+    --paper-sunk: #23261f;
+    --ink: #e9e5db;
+    --ink-soft: #b6b3a6;
+    --ink-faint: #7b7f72;
+    --olive: #97a28b;
+    --gold: #c9b68e;
+    --rule: #343830;
+    --rule-strong: #4a4f44;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-olive: var(--olive);
+  --color-gold: var(--gold);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --font-display: var(--font-mincho), "Hiragino Mincho ProN", serif;
+  --font-body: var(--font-gothic), "Hiragino Sans", system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+* {
+  border-radius: 0 !important;
+}
+
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-feature-settings: "palt" 1;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  text-underline-offset: 0.28em;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- type roles ---------- */
+
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+}
+
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.t-mono-plain {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ---------- the register: hairline structure ---------- */
+
+.rule-t {
+  border-top: 1px solid var(--rule);
+}
+.rule-b {
+  border-bottom: 1px solid var(--rule);
+}
+.rule-l {
+  border-left: 1px solid var(--rule);
+}
+
+/* ---------- the epistemic stamp ---------- *
+ * A pressed mark in the margin, not a pill badge. The ring is the stamp edge;
+ * the letter is the die.
+ */
+
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 1px solid currentColor;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  line-height: 1;
+  flex: none;
+  user-select: none;
+}
+
+.stamp[data-kind="verified"] {
+  color: var(--kind-verified);
+  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 3px currentColor;
+}
+.stamp[data-kind="inference"] {
+  color: var(--kind-inference);
+}
+.stamp[data-kind="hypothetical"] {
+  color: var(--kind-hypothetical);
+  border-style: solid;
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.stamp[data-kind="unknown"] {
+  color: var(--kind-unknown);
+  border-style: dashed;
+}
+
+/* Claim text takes its weight cue from the stamp, never a background fill. */
+.claim[data-kind="verified"] {
+  color: var(--ink);
+}
+.claim[data-kind="inference"] {
+  color: var(--ink-soft);
+}
+.claim[data-kind="hypothetical"] {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.claim[data-kind="unknown"] {
+  color: var(--ink-faint);
+}
+
+/* ---------- core sample strata ---------- *
+ * Strata are physical, so this is the one place a gradient is allowed.
+ */
+
+.stratum {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tone-color) var(--tone-a), var(--paper)) 0%,
+    color-mix(in srgb, var(--tone-color) var(--tone-b), var(--paper)) 100%
+  );
+}
+
+/* ---------- links ---------- */
+
+.link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule-strong);
+  transition: text-decoration-color 180ms ease;
+}
+.link:hover {
+  text-decoration-color: var(--gold);
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  background: transparent;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+.btn:disabled {
+  color: var(--ink-faint);
+  border-color: var(--rule);
+  cursor: default;
+}
+.btn[data-variant="primary"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn[data-variant="primary"]:hover:not(:disabled) {
+  background: var(--olive);
+  border-color: var(--olive);
+}
+
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font-body);
+  padding: 0.5rem 0;
+  transition: border-color 180ms ease;
+}
+.field:focus {
+  outline: none;
+  border-bottom-color: var(--gold);
+}
+.field::placeholder {
+  color: var(--ink-faint);
+}
+
+/* ---------- the descending timeline (hero signature) ---------- */
+
+@keyframes draw-down {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes press {
+  0% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.anim-settle {
+  animation: settle 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.anim-draw {
+  transform-origin: top;
+  animation: draw-down 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.anim-press {
+  animation: press 420ms cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.5ch;
+  height: 1em;
+  margin-left: 0.15em;
+  background: var(--gold);
+  vertical-align: -0.12em;
+  animation: caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+  .caret::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ---------- print: the record should print like a record ---------- */
+
+@media print {
+  :root {
+    --paper: #ffffff;
+    --ink: #000000;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ---------- appearance toggle labels (no React state) ---------- */
+
+.theme-label-dark {
+  display: none;
+}
+:root[data-theme="dark"] .theme-label-dark {
+  display: inline;
+}
+:root[data-theme="dark"] .theme-label-light {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-label-dark {
+    display: inline;
+  }
+  :root:not([data-theme="light"]) .theme-label-light {
+    display: none;
+  }
+}
