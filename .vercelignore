@@ -1,0 +1,7 @@
+# Not needed to build or run the app. Keeps CLI deploys small.
+# (Git-based deployments clone the repository and ignore this file.)
+artifacts
+tests
+scripts
+playwright.config.ts
+vitest.config.ts

@@ -46,6 +46,7 @@ npm run verify       # typecheck + lint + test + build
 npm run docs:sources # DATA_SOURCES.md をコーパスから再生成
 npm run shots        # artifacts/screenshots を撮り直す（先に npm run start）
 npm run clean        # .next と iCloud の重複ファイルを消す
+npm run predeploy    # Vercel デプロイ前の検査（リージョン数・maxDuration・鍵の露出）
 ```
 
 `typecheck` は `next typegen` を先に走らせます。ルート型は `.next` に生成されるため、

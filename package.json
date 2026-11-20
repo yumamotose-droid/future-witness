@@ -14,7 +14,8 @@
     "verify": "npm run typecheck && npm run lint && npm run test && npm run build",
     "docs:sources": "tsx scripts/generate-data-sources.ts",
     "shots": "tsx scripts/capture-screenshots.mts",
-    "clean": "rm -rf .next tsconfig.tsbuildinfo && find . -name '* [0-9].*' -not -path './node_modules/*' -delete"
+    "clean": "rm -rf .next tsconfig.tsbuildinfo && find . -name '* [0-9].*' -not -path './node_modules/*' -delete",
+    "predeploy": "tsx scripts/predeploy-check.mts"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",
