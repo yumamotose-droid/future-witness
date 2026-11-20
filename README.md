@@ -97,6 +97,7 @@ Claude や OpenAI への差し替えはアダプタ1ファイルで済みます�
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | 色・書体・構造 |
 | [SECURITY.md](SECURITY.md) | 脅威モデルと対策、既知の限界 |
 | [TEST_REPORT.md](TEST_REPORT.md) | 実際に実行した検証とその結果 |
+| [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | 20問の実行検証・出典URL検証・画面検証・動画制作の結果 |
 | [EVALUATION_REPORT.md](EVALUATION_REPORT.md) | 10視点からの自己批判 |
 | [COMPETITOR_ANALYSIS.md](COMPETITOR_ANALYSIS.md) | 先行研究・競合との差分 |
 | [CONTEST_STRATEGY.md](CONTEST_STRATEGY.md) | 応募戦略と想定問答 |

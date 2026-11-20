@@ -24,7 +24,8 @@
     "video:captions": "tsx scripts/render-captions.mts",
     "video:build": "tsx scripts/build-video.mts",
     "video": "npm run video:narration && npm run video:record && npm run video:captions && npm run video:build",
-    "audit:viewports": "tsx scripts/audit-viewports.mts"
+    "audit:viewports": "tsx scripts/audit-viewports.mts",
+    "docs:demo": "tsx scripts/generate-demo-script.mts"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",

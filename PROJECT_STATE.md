@@ -8,10 +8,17 @@
 ## 現在の状態: 一通り完成し、検証済み。未デプロイ。
 
 ```
-npm run verify   → PASS（型0・Lint0・単体60件・本番ビルド成功）
-npm run test:e2e → 20 passed (2.4m)
-npm audit        → 0 vulnerabilities
+npm run verify          → PASS（型0・Lint0・単体60件・本番ビルド成功）
+npm run test:e2e        → 20 passed
+npm run validate        → 陰性対照4/4検出・20問254項目すべて通過
+npm run verify:sources  → 到達14 / 要ブラウザ確認1 / 到達不能0
+npm run audit:viewports → 4画面すべて指摘0件
+npm run video           → 90.00秒 MP4 を生成
+npm run predeploy       → 8/8 通過
+npm audit               → 0 vulnerabilities
 ```
+
+**90秒デモ動画は完成しています**: `artifacts/video/future-witness-demo.mp4`
 
 ## 完了した工程
 
@@ -75,7 +82,10 @@ npm audit        → 0 vulnerabilities
 
 ## 残タスク（人間の操作が必要）
 
-1. **Gemini API キーの取得と `.env.local` への設定** → ライブ実行の初回検証
+1. **Gemini API キーの取得と `.env.local` への設定**
+   → `npm run validate:live` で20問をライブ検証（仕組みは完成済み、未実行）
+   → `npm run video` を再実行して動画をライブ版に差し替え
+     （公式は「AIを活用しているシーン」を必須としており、現在の動画は脚本モード）
 2. ~~GitHub リポジトリの作成・プッシュ・公開~~ → **完了（public）**。
    <https://github.com/yumamotose-droid/future-witness>
 3. **Vercel アカウント／プロジェクトの作成とデプロイ**
