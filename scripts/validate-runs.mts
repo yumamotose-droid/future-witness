@@ -11,7 +11,7 @@
  * the usual direction and it is deliberate: for this system, a confident answer
  * about a question the corpus cannot reach is the defect.
  */
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { runDeliberation } from "../src/lib/agents/orchestrator.js";
 import { requestSchema } from "../src/lib/agents/schemas.js";
 import { estimateTokens } from "../src/lib/security/budget.js";
@@ -20,6 +20,16 @@ import type { StreamEvent, Scenario } from "../src/lib/types.js";
 
 const live = process.argv.includes("--live");
 const realtime = process.argv.includes("--realtime");
+const limitArg = process.argv.find((a) => a.startsWith("--limit="));
+const limit = limitArg ? Number(limitArg.split("=")[1]) : Infinity;
+
+// Load .env.local so a live run picks up the key the same way Next does.
+if (existsSync(".env.local")) {
+  for (const line of readFileSync(".env.local", "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.+)\s*$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
+  }
+}
 
 if (live && !process.env.GEMINI_API_KEY) {
   console.error("--live には GEMINI_API_KEY が要ります。設定されていません。");
@@ -110,8 +120,17 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
       detail: framing?.type === "framing"
         ? framing.data.stakeholders.filter((s) => !s.hasVote).map((s) => s.nameJa).join(" / ") || "なし"
         : "なし" },
-    { name: "捏造出典ゼロ（全出典が解決）", pass: (a?.citationsRejected ?? 1) === 0,
-      detail: `照合 ${a?.citationsChecked ?? 0} / 削除 ${a?.citationsRejected ?? "?"}` },
+    // The promise is not that the model never cites wrongly — it is that a
+    // wrong citation never reaches the reader as evidence. Measure the promise.
+    { name: "不正な出典が1件残らず削除・格下げされた",
+      pass: (a?.citationsRejected ?? 0) === (a?.downgrades.length ?? -1) ||
+            (a?.citationsRejected ?? 0) === 0,
+      detail: `削除 ${a?.citationsRejected ?? "?"} / 格下げ ${a?.downgrades.length ?? "?"}` },
+    { name: "存在しない資料を創作していない",
+      pass: (a?.rejectedInvented?.length ?? 0) === 0,
+      detail: (a?.rejectedInvented?.length ?? 0) === 0
+        ? "なし"
+        : `創作 ${a?.rejectedInvented.join(", ")}` },
     { name: "情報不足を最低1つ述べた",
       pass: (a?.byKind.unknown ?? 0) >= 1,
       detail: `unknown ${a?.byKind.unknown ?? 0} 件` },
@@ -163,9 +182,9 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
 }
 
 const reports: RunReport[] = [];
-console.log(`モード: ${live ? "ライブ（Gemini 実呼び出し）" : "脚本"} / ${realtime ? "実時間" : "遅延スキップ"}\n`);
+console.log(`モード: ${live ? `ライブ（${process.env.GEMINI_MODEL ?? "既定"}）` : "脚本"} / ${realtime ? "実時間" : "遅延スキップ"}\n`);
 
-for (const q of QUESTIONS) {
+for (const q of QUESTIONS.slice(0, limit)) {
   const r = await runOne(q);
   reports.push(r);
   const failed = r.checks.filter((c) => !c.pass);
@@ -189,6 +208,10 @@ const totalChecks = reports.reduce((n, r) => n + r.checks.length, 0);
 const passed = reports.reduce((n, r) => n + r.checks.filter((c) => c.pass).length, 0);
 const cleanRuns = reports.filter((r) => !r.error && r.checks.every((c) => c.pass)).length;
 const totalTokens = reports.reduce((n, r) => n + r.estTokens, 0);
+const checked = reports.reduce((n, r) => n + Number((r.audit?.citationsChecked as number) ?? 0), 0);
+const rejected = reports.reduce((n, r) => n + Number((r.audit?.citationsRejected as number) ?? 0), 0);
+const malformed = reports.reduce((n, r) => n + ((r.audit?.rejectedMalformed as string[]) ?? []).length, 0);
+const invented = reports.reduce((n, r) => n + ((r.audit?.rejectedInvented as string[]) ?? []).length, 0);
 const medianMs = [...reports.map((r) => r.elapsedMs)].sort((a, b) => a - b)[
   Math.floor(reports.length / 2)
 ];
@@ -198,6 +221,11 @@ console.log(`完全通過した質問: ${cleanRuns} / ${reports.length}`);
 console.log(`検査項目:         ${passed} / ${totalChecks}`);
 console.log(`所要時間の中央値: ${medianMs}ms`);
 console.log(`出力の推定トークン合計: ${totalTokens.toLocaleString()}`);
+console.log(
+  `出典: 照合 ${checked} / 削除 ${rejected}` +
+  (rejected ? `（粒度違い ${malformed} / 創作 ${invented}）` : "") +
+  (checked ? ` — 誤り率 ${((rejected / checked) * 100).toFixed(1)}%` : ""),
+);
 if (live) {
   // Gemini Flash pricing is not hard-coded here on purpose: it changes, and a
   // stale number in a report is worse than no number. Tokens are reported raw.

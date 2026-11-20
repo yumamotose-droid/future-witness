@@ -192,6 +192,16 @@ export interface AuditReport {
   /** Citations pointing at finding ids that do not exist. Removed, not shown. */
   citationsRejected: number;
   rejectedIds: string[];
+  /**
+   * Rejected ids that name a source we hold but not a finding in it — the
+   * model cited `jp-forest-multifunction` where it needed
+   * `jp-forest-multifunction#surface-erosion`. Still rejected, because a
+   * verified claim has to point at the sentence it rests on, but it is a
+   * different failure from inventing a document and worth counting apart.
+   */
+  rejectedMalformed: string[];
+  /** Rejected ids naming no source we hold at all. */
+  rejectedInvented: string[];
   downgrades: {
     statementId: string;
     from: EpistemicKind;

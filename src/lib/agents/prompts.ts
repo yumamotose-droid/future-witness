@@ -27,6 +27,13 @@ const GUARD = `
 - Never invent a citation. The only valid values for sourceIds are ids from the
   CITABLE FINDINGS list given to you, copied character for character. If no finding
   supports a sentence, do not cite anything and do not mark it "verified".
+- Every citation is <source-id>#<finding-id> — BOTH halves, with the # between them.
+  Correct:   "jp-forest-multifunction#surface-erosion"
+  REJECTED:  "jp-forest-multifunction"        (names the document, not the sentence)
+  REJECTED:  "surface-erosion"                 (names the sentence, not the document)
+  A citation without the # is thrown away by the server and the claim loses its
+  verified status, because a reader cannot check a whole document against one
+  sentence. Copy the id exactly as it appears in brackets in the list.
 - Never state a probability, a precise future figure, a risk score or a monetary loss
   estimate that is not present in a cited finding.
 - Write every field in both Japanese and English. The Japanese is primary; the English

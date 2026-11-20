@@ -1,4 +1,4 @@
-import { FINDING_INDEX } from "./corpus";
+import { CORPUS, FINDING_INDEX } from "./corpus";
 import type {
   AuditReport,
   Claim,
@@ -36,6 +36,8 @@ interface Mutable {
   citationsChecked: number;
   citationsRejected: number;
   rejectedIds: string[];
+  rejectedMalformed: string[];
+  rejectedInvented: string[];
   downgrades: AuditReport["downgrades"];
   sourcesUsed: Set<string>;
   byKind: Record<EpistemicKind, number>;
@@ -57,7 +59,14 @@ function verifyClaim(
       m.sourcesUsed.add(resolved.source.id);
     } else {
       m.citationsRejected += 1;
-      if (!m.rejectedIds.includes(id)) m.rejectedIds.push(id);
+      if (!m.rejectedIds.includes(id)) {
+        m.rejectedIds.push(id);
+        const sourceId = id.split("#")[0];
+        const bucket = CORPUS.some((s) => s.id === sourceId)
+          ? m.rejectedMalformed
+          : m.rejectedInvented;
+        bucket.push(id);
+      }
     }
   }
 
@@ -126,6 +135,8 @@ export function verifyStatements(
     citationsChecked: 0,
     citationsRejected: 0,
     rejectedIds: [],
+    rejectedMalformed: [],
+    rejectedInvented: [],
     downgrades: [],
     sourcesUsed: new Set<string>(),
     byKind: { verified: 0, inference: 0, hypothetical: 0, unknown: 0 },
@@ -150,7 +161,14 @@ export function verifyStatements(
           m.sourcesUsed.add(resolved.source.id);
         } else {
           m.citationsRejected += 1;
-          if (!m.rejectedIds.includes(id)) m.rejectedIds.push(id);
+          if (!m.rejectedIds.includes(id)) {
+            m.rejectedIds.push(id);
+            const sourceId = id.split("#")[0].trim();
+            (CORPUS.some((s) => s.id === sourceId)
+              ? m.rejectedMalformed
+              : m.rejectedInvented
+            ).push(id);
+          }
         }
       }
       indicator.sourceIds = kept;
@@ -174,6 +192,8 @@ export function verifyStatements(
       citationsChecked: m.citationsChecked,
       citationsRejected: m.citationsRejected,
       rejectedIds: m.rejectedIds,
+      rejectedMalformed: m.rejectedMalformed,
+      rejectedInvented: m.rejectedInvented,
       downgrades: m.downgrades,
       scenarioDivergence: scenarioDivergence(scenarios),
       sourcesUsed: [...m.sourcesUsed],
@@ -204,6 +224,8 @@ export function mergeAudits(
     citationsChecked: a.citationsChecked + b.citationsChecked,
     citationsRejected: a.citationsRejected + b.citationsRejected,
     rejectedIds: [...new Set([...a.rejectedIds, ...b.rejectedIds])],
+    rejectedMalformed: [...new Set([...a.rejectedMalformed, ...b.rejectedMalformed])],
+    rejectedInvented: [...new Set([...a.rejectedInvented, ...b.rejectedInvented])],
     downgrades: [...a.downgrades, ...b.downgrades],
     scenarioDivergence: Math.max(a.scenarioDivergence, b.scenarioDivergence),
     sourcesUsed: [...new Set([...a.sourcesUsed, ...b.sourcesUsed])],
@@ -217,6 +239,8 @@ export function emptyAudit(): VerificationOutcome["audit"] {
     citationsChecked: 0,
     citationsRejected: 0,
     rejectedIds: [],
+    rejectedMalformed: [],
+    rejectedInvented: [],
     downgrades: [],
     scenarioDivergence: 0,
     sourcesUsed: [],
