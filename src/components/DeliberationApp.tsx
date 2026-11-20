@@ -554,7 +554,7 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <Link href="/" className="link t-mono-plain mt-8 inline-block">
+              <Link href="/" className="link t-mono-plain tap mt-8 inline-block">
                 ← Future Witness
               </Link>
             </section>

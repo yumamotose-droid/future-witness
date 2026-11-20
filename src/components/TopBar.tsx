@@ -43,13 +43,13 @@ export function TopBar({
   return (
     <header className="rule-b no-print sticky top-0 z-40 bg-paper/95 backdrop-blur-[2px]">
       <div className="mx-auto flex max-w-[78rem] items-baseline gap-4 px-4 py-3 sm:px-8">
-        <Link href="/" className="t-mono text-ink">
+        <Link href="/" className="t-mono tap text-ink">
           Future Witness
         </Link>
         <span className="t-mono-plain hidden text-ink-faint sm:inline">
           未来の証人
         </span>
-        <div className="ml-auto flex items-center gap-4">
+        <div className="ml-auto flex items-center gap-2">
           {mode ? (
             <span
               className="t-mono border px-2 py-1"
@@ -66,7 +66,7 @@ export function TopBar({
             <button
               type="button"
               onClick={() => onLangChange(lang === "ja" ? "en" : "ja")}
-              className="t-mono text-ink-soft hover:text-ink"
+              className="t-mono tap px-2 text-ink-soft hover:text-ink"
             >
               {L.langToggle}
             </button>
@@ -75,7 +75,7 @@ export function TopBar({
             type="button"
             onClick={toggleTheme}
             aria-label={L.themeToggle}
-            className="t-mono text-ink-soft hover:text-ink"
+            className="t-mono tap px-2 text-ink-soft hover:text-ink"
           >
             <span className="theme-label-light">Dark</span>
             <span className="theme-label-dark">Light</span>

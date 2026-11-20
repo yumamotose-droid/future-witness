@@ -90,7 +90,8 @@ export function StanceForm({
           step={5}
           value={confidence}
           onChange={(event) => setConfidence(Number(event.target.value))}
-          className="mt-3 w-full accent-[var(--olive)]"
+          // A 16px-tall range control is not draggable with a thumb.
+          className="mt-3 h-11 w-full accent-[var(--olive)]"
         />
       </div>
 

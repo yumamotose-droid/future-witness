@@ -88,7 +88,7 @@ export function ReportPanel({
       </div>
 
       <details className="mt-8">
-        <summary className="t-mono cursor-pointer text-ink-faint hover:text-ink">
+        <summary className="t-mono tap cursor-pointer text-ink-faint hover:text-ink">
           {lang === "ja" ? "レポートの中身を見る" : "Preview the record"}
         </summary>
         <pre className="t-mono-plain mt-4 max-h-[26rem] overflow-auto border border-rule bg-paper-deep p-5 text-[0.75rem] leading-[1.8] whitespace-pre-wrap text-ink-soft">

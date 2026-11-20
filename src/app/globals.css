@@ -125,7 +125,9 @@ body {
 
 .t-mono-plain {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  /* 13px, not 12: at 12px Japanese secondary text stops being readable on a
+     phone, and most of this text carries the limitation on a figure. */
+  font-size: 0.8125rem;
   letter-spacing: 0.04em;
   text-transform: none;
 }
@@ -394,5 +396,59 @@ body {
   }
   :root:not([data-theme="light"]) .theme-label-light {
     display: none;
+  }
+}
+
+
+/* ---------- touch targets ---------- *
+ * Extends the hit area to 44px without changing where anything sits. The
+ * header controls are 18px of type on a hairline row; growing the row to suit
+ * a thumb would wreck the proportion, so the target grows and the type does not.
+ */
+
+.tap {
+  position: relative;
+}
+.tap::after {
+  content: "";
+  position: absolute;
+  /* Vertical only. Expanding sideways would push the pseudo-element past the
+     parent, which overlaps neighbours and shows up as phantom overflow in the
+     viewport audit. Narrow controls get real padding instead. */
+  inset-inline: 0;
+  top: 50%;
+  height: 44px;
+  transform: translateY(-50%);
+}
+
+
+/* ---------- core samples ---------- *
+ * The decade rows are aligned across columns with a subgrid, which needs the
+ * column count on the container. Setting that inline pinned it to three
+ * columns at every width, so a 412px phone was rendering three 105px columns —
+ * the signature view of the product, unusable on the device most people will
+ * open it on. The count now lives in a custom property and only applies from
+ * the tablet breakpoint up; below that each scenario is a full-width block.
+ */
+
+.cores {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem 2rem;
+}
+
+.cores > .core {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .cores {
+    grid-template-columns: repeat(var(--cores, 3), minmax(0, 1fr));
+    grid-template-rows: auto auto repeat(3, auto);
+  }
+  .cores > .core {
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
   }
 }

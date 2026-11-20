@@ -92,19 +92,15 @@ export function CoreSamples({
         column, the comparison the view exists for cannot be made.
       */}
       <div
-        className="mt-10 grid gap-x-8 gap-y-12"
-        style={{
-          gridTemplateColumns: `repeat(${Math.min(scenarios.length, 3)}, minmax(0, 1fr))`,
-          gridTemplateRows: "auto auto repeat(3, auto)",
-        }}
+        className="cores mt-10"
+        style={
+          { "--cores": Math.min(scenarios.length, 3) } as React.CSSProperties
+        }
       >
         {scenarios.map((scenario) => {
           const option = options.find((o) => o.id === scenario.optionId);
           return (
-            <article
-              key={scenario.id}
-              className="row-span-5 grid grid-rows-subgrid"
-            >
+            <article key={scenario.id} className="core">
               <header className="rule-b self-start pb-4">
                 <div className="flex items-baseline gap-3">
                   <span className="t-mono text-[var(--gold)]">
@@ -295,7 +291,7 @@ export function CoreSamples({
                           <span className="sr-only">
                             {lang === "ja" ? dir.ja : dir.en}
                           </span>
-                          <p className="mt-1 max-w-[16rem] text-[0.75rem] leading-[1.8] text-ink-faint">
+                          <p className="mt-1 max-w-[16rem] text-[0.8125rem] leading-[1.8] text-ink-faint">
                             {lang === "ja"
                               ? indicator.noteJa
                               : indicator.noteEn}
