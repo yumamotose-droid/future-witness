@@ -26,7 +26,8 @@
     "video": "npm run video:narration && npm run video:record && npm run video:captions && npm run video:build",
     "audit:viewports": "tsx scripts/audit-viewports.mts",
     "docs:demo": "tsx scripts/generate-demo-script.mts",
-    "check:key": "tsx scripts/check-key.mts"
+    "check:key": "tsx scripts/check-key.mts",
+    "set:key": "tsx scripts/set-key.mts"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",
