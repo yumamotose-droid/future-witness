@@ -12,8 +12,11 @@
   その記述は「確認された根拠」から「推論」へ格下げされます。削除件数は検証記録に残ります。
 - 各記述には、その数値を単独で引用してはならない理由（限界）が併記されています。
   製品画面でも、限界は数値と同じ画面に表示されます。
-- `確認日` は、その URL が検索結果に実在することを確認した日付です。
+- `確認日` は、その URL が実在し到達できることを確認した日付です。
   資料本文の全文査読を意味するものではありません。この区別は意図的なものです。
+- URL の到達性は `npm run verify:sources` で機械的に確認できます（HTTPで実取得）。
+  2026-11-20 時点で 15件中 14件が到達、1件（UNEP）は非ブラウザからの要求を 403 で
+  拒否しますが、実ブラウザでの表示を確認済みです。到達不能はゼロ件です。
 
 ## 既知の限界
 
@@ -132,7 +135,7 @@
 | 地域 | 世界 / Global |
 | 適用範囲 | 地球規模の評価。特定の地域や一つの開発計画の影響を直接推定するものではない。2019年時点の評価。 |
 | URL確認日 | 2026-11-20 |
-| URL | <https://www.unep.org/news-and-stories/press-release/natures-dangerous-decline-unprecedented-species-extinction-rates> |
+| URL | <https://www.unep.org/en/news-and-stories/press-release/natures-dangerous-decline-unprecedented-species-extinction-rates> |
 
 **引用可能な記述**
 
@@ -275,26 +278,26 @@
   - 事前登録されたランダム化比較試験（参加者は報告により188名〜344名）で、AIが生成した60歳の自分との対話により、不安の低減と未来自己連続性の向上が報告された。
   - 限界: 短期効果であり、参加者の多くは若年成人。使用モデルはGPT-3.5の改変版。『自分の未来』が対象で、『他者である将来世代』ではない。
 
-## 12. 集合的意思決定におけるAIの『声』の活用
+## 12. AIは将来の人類を代弁できるか（集合的意思決定におけるAIの「声」）
 
-*Using AI Voice to Make Collective Decision Making More Inclusive*
+*Could AI Speak on Behalf of Future Humans?*
 
 | 項目 | 内容 |
 | --- | --- |
 | ID | `stanford-pacs-ai-voice` |
-| 発行機関 | Stanford PACS |
+| 発行機関 | Stanford Social Innovation Review（Konstantin Scheuermann・Angela Aristidou） |
 | 発行年 | 2024 |
-| 参照箇所 | 包摂的な熟議プロセスにおいて将来世代と自然が除外される問題の指摘 |
+| 参照箇所 | 冒頭の「perspective deficit」の議論（2024年2月5日公開） |
 | 地域 | 世界 / Global |
 | 適用範囲 | 問題提起と構想の提示。実装の有効性検証ではない。 |
 | URL確認日 | 2026-11-20 |
-| URL | <https://pacscenter.stanford.edu/wp-content/uploads/2024/02/Using-AI-Voice-to-Make-Collective-Decision-Making%E2%80%A6.pdf> |
+| URL | <https://doi.org/10.48558/N4BW-ND72> |
 
 **引用可能な記述**
 
 - `stanford-pacs-ai-voice#excluded-from-deliberation`
-  - きわめて包摂的に設計された熟議プロセスであっても、将来世代と自然は参加者から除外されうると指摘されている。
-  - 限界: AIが代弁者として適切かという規範的論点は未解決として扱われている。
+  - 集合的意思決定には「視点の欠落」があり、将来世代と自然環境は現在の決定に深く影響されるにもかかわらず、自らの利益を主張できないために「声を持たない」存在になっていると指摘されている。
+  - 限界: AIが代弁者として適切かは、思慮深く設計され責任をもって運用された場合に限るという条件付きで論じられており、規範的論点は未解決。
 
 ## 13. EU世代間公平性戦略への提言
 

@@ -171,7 +171,8 @@ AIが代替できるかは検証していません。本システムもその検
 意思決定に参加できない当事者（自然、将来世代、動物）のためにAIが語るという構想に
 「AI Voice」という名前を与えた2024年の論考。きわめて包摂的に設計された熟議でも
 将来世代と自然は除外されうると指摘し、AIによる代弁が適切かは未解決としています。
-<https://pacscenter.stanford.edu/news/could-ai-speak-on-behalf-of-future-humans>
+<https://doi.org/10.48558/N4BW-ND72>（Stanford Social Innovation Review 掲載。
+旧 Stanford PACS のURLはサイト改編で失われたため DOI を使用）
 
 本システムはこの論点を**解決したと主張しません。** COUNTER に
 「代弁という行為そのものへの反証」を必ず出させることで、未解決であることを

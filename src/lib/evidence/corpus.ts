@@ -163,7 +163,7 @@ export const CORPUS: SourceRecord[] = [
       "IPBES Global Assessment Report on Biodiversity and Ecosystem Services",
     org: "IPBES / UNEP",
     year: 2019,
-    url: "https://www.unep.org/news-and-stories/press-release/natures-dangerous-decline-unprecedented-species-extinction-rates",
+    url: "https://www.unep.org/en/news-and-stories/press-release/natures-dangerous-decline-unprecedented-species-extinction-rates",
     locator: "政策決定者向け要約（五つの直接要因のランキング、改変された陸地割合）",
     region: "世界 / Global",
     scopeJa:
@@ -376,12 +376,16 @@ export const CORPUS: SourceRecord[] = [
   },
   {
     id: "stanford-pacs-ai-voice",
-    titleJa: "集合的意思決定におけるAIの『声』の活用",
-    titleEn: "Using AI Voice to Make Collective Decision Making More Inclusive",
-    org: "Stanford PACS",
+    titleJa:
+      "AIは将来の人類を代弁できるか（集合的意思決定におけるAIの「声」）",
+    titleEn: "Could AI Speak on Behalf of Future Humans?",
+    org: "Stanford Social Innovation Review（Konstantin Scheuermann・Angela Aristidou）",
     year: 2024,
-    url: "https://pacscenter.stanford.edu/wp-content/uploads/2024/02/Using-AI-Voice-to-Make-Collective-Decision-Making%E2%80%A6.pdf",
-    locator: "包摂的な熟議プロセスにおいて将来世代と自然が除外される問題の指摘",
+    // DOI rather than a site URL: the Stanford PACS page that first carried this
+    // was lost in a site restructure, and a dead citation is worse than none.
+    url: "https://doi.org/10.48558/N4BW-ND72",
+    locator:
+      "冒頭の「perspective deficit」の議論（2024年2月5日公開）",
     region: "世界 / Global",
     scopeJa: "問題提起と構想の提示。実装の有効性検証ではない。",
     scopeEn:
@@ -391,11 +395,12 @@ export const CORPUS: SourceRecord[] = [
     findings: [
       {
         id: "excluded-from-deliberation",
-        ja: "きわめて包摂的に設計された熟議プロセスであっても、将来世代と自然は参加者から除外されうると指摘されている。",
-        en: "Even highly inclusive deliberative processes may still exclude future human generations and nature.",
-        caveatJa: "AIが代弁者として適切かという規範的論点は未解決として扱われている。",
+        ja: "集合的意思決定には「視点の欠落」があり、将来世代と自然環境は現在の決定に深く影響されるにもかかわらず、自らの利益を主張できないために「声を持たない」存在になっていると指摘されている。",
+        en: "Collective decision-making suffers a \u201cperspective deficit\u201d: future generations and the natural environment are deeply affected by present-day decisions, yet are often \u201cvoiceless\u201d because they cannot advocate for their own interests.",
+        caveatJa:
+          "AIが代弁者として適切かは、思慮深く設計され責任をもって運用された場合に限るという条件付きで論じられており、規範的論点は未解決。",
         caveatEn:
-          "Whether AI is an appropriate proxy is treated as an open normative question.",
+          "The piece conditions its claim on systems being designed thoughtfully and deployed responsibly; the normative question is left open.",
       },
     ],
   },
