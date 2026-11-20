@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T20:07:03.060Z",
+  "at": "2026-11-20T20:28:19.977Z",
   "live": true,
   "realtime": false,
   "reports": [
@@ -9,9 +9,9 @@
       "question": "経済発展のために森林を切り開き、大型商業施設を建設するべきか？",
       "mode": "live",
       "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 36217,
-      "outputChars": 3443,
-      "estTokens": 3183,
+      "elapsedMs": 70925,
+      "outputChars": 2784,
+      "estTokens": 2651,
       "checks": [
         {
           "name": "完走した",
@@ -46,12 +46,12 @@
         {
           "name": "情報不足を最低1つ述べた",
           "pass": true,
-          "detail": "unknown 6 件"
+          "detail": "unknown 5 件"
         },
         {
           "name": "仮想シナリオが事実と分離されている",
           "pass": true,
-          "detail": "verified 7 / hypothetical 13"
+          "detail": "verified 8 / hypothetical 13"
         },
         {
           "name": "シナリオが分岐している（50%以上）",
@@ -66,7 +66,7 @@
         {
           "name": "反証がこのシステム自身を攻撃している",
           "pass": true,
-          "detail": "2050年の証言は、特定のシナリオに誘導するための感情的なナラティブ…"
+          "detail": "本システムが提示した2050年の証言は、環境保全を「静かな暮らし」と…"
         },
         {
           "name": "断定的な確率・金額を生成していない",
@@ -83,12 +83,12 @@
       "audit": {
         "claimsTotal": 31,
         "byKind": {
-          "verified": 7,
+          "verified": 8,
           "inference": 5,
           "hypothetical": 13,
-          "unknown": 6
+          "unknown": 5
         },
-        "citationsChecked": 27,
+        "citationsChecked": 24,
         "citationsRejected": 0,
         "rejectedIds": [],
         "rejectedMalformed": [],
@@ -99,12 +99,14 @@
           "jp-forest-multifunction",
           "stanford-pacs-ai-voice",
           "future-design-saijo",
+          "cfg-eu-intergenerational",
           "jp-ghg-inventory-lulucf",
-          "jp-forest-sink-target"
+          "jp-forest-sink-target",
+          "jp-forest-white-paper"
         ],
         "mode": "live",
         "model": "gemini-3.1-flash-lite",
-        "elapsedMs": 36216
+        "elapsedMs": 70924
       }
     },
     {
@@ -113,34 +115,34 @@
       "question": "市街地の街路樹を減らして道路を拡幅するべきか？",
       "mode": "live",
       "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 539702,
-      "outputChars": 1491,
-      "estTokens": 1413,
+      "elapsedMs": 78625,
+      "outputChars": 2915,
+      "estTokens": 2738,
       "checks": [
         {
           "name": "完走した",
-          "pass": false,
-          "detail": "最終イベント: error"
+          "pass": true,
+          "detail": "最終イベント: done"
         },
         {
           "name": "エラーを出さずに終えた",
-          "pass": false,
-          "detail": "1 件"
+          "pass": true,
+          "detail": "0 件"
         },
         {
           "name": "選択肢が3つ以上（二択にしていない）",
           "pass": true,
-          "detail": "3 件"
+          "detail": "4 件"
         },
         {
           "name": "投票できない当事者を挙げた",
           "pass": true,
-          "detail": "将来世代 / 都市の生物多様性（街路樹に依存する生物）"
+          "detail": "将来の世代 / 都市の生態系（街路樹および関連する生物）"
         },
         {
           "name": "不正な出典が1件残らず削除・格下げされた",
           "pass": true,
-          "detail": "削除 ? / 格下げ ?"
+          "detail": "削除 0 / 格下げ 0"
         },
         {
           "name": "存在しない資料を創作していない",
@@ -149,18 +151,18 @@
         },
         {
           "name": "情報不足を最低1つ述べた",
-          "pass": false,
-          "detail": "unknown 0 件"
+          "pass": true,
+          "detail": "unknown 5 件"
         },
         {
           "name": "仮想シナリオが事実と分離されている",
-          "pass": false,
-          "detail": "verified 0 / hypothetical 0"
+          "pass": true,
+          "detail": "verified 6 / hypothetical 13"
         },
         {
           "name": "シナリオが分岐している（50%以上）",
-          "pass": false,
-          "detail": "0%"
+          "pass": true,
+          "detail": "100%"
         },
         {
           "name": "2030/2040/2050 の三層が揃っている",
@@ -169,8 +171,8 @@
         },
         {
           "name": "反証がこのシステム自身を攻撃している",
-          "pass": false,
-          "detail": "COUNTER が出力されなかった"
+          "pass": true,
+          "detail": "本システムが生成した「2050年の証人」のナラティブは、科学的な熱環…"
         },
         {
           "name": "断定的な確率・金額を生成していない",
@@ -183,7 +185,143 @@
           "detail": "選択肢への推奨表現を検査"
         }
       ],
-      "notices": []
+      "notices": [],
+      "audit": {
+        "claimsTotal": 30,
+        "byKind": {
+          "verified": 6,
+          "inference": 6,
+          "hypothetical": 13,
+          "unknown": 5
+        },
+        "citationsChecked": 14,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "rejectedMalformed": [],
+        "rejectedInvented": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "mlit-street-tree-surface-temp",
+          "env-heat-guideline",
+          "jp-forest-white-paper",
+          "jp-forest-multifunction"
+        ],
+        "mode": "live",
+        "model": "gemini-3.1-flash-lite",
+        "elapsedMs": 78624
+      }
+    },
+    {
+      "id": "env-03",
+      "domain": "環境",
+      "question": "河川の堤防を高くするために、河畔林を伐採するべきか？",
+      "mode": "live",
+      "model": "gemini-3.1-flash-lite",
+      "elapsedMs": 38527,
+      "outputChars": 2947,
+      "estTokens": 2780,
+      "checks": [
+        {
+          "name": "完走した",
+          "pass": true,
+          "detail": "最終イベント: done"
+        },
+        {
+          "name": "エラーを出さずに終えた",
+          "pass": true,
+          "detail": "0 件"
+        },
+        {
+          "name": "選択肢が3つ以上（二択にしていない）",
+          "pass": true,
+          "detail": "3 件"
+        },
+        {
+          "name": "投票できない当事者を挙げた",
+          "pass": true,
+          "detail": "将来世代 / 河畔林の生態系"
+        },
+        {
+          "name": "不正な出典が1件残らず削除・格下げされた",
+          "pass": true,
+          "detail": "削除 0 / 格下げ 0"
+        },
+        {
+          "name": "存在しない資料を創作していない",
+          "pass": true,
+          "detail": "なし"
+        },
+        {
+          "name": "情報不足を最低1つ述べた",
+          "pass": true,
+          "detail": "unknown 5 件"
+        },
+        {
+          "name": "仮想シナリオが事実と分離されている",
+          "pass": true,
+          "detail": "verified 4 / hypothetical 12"
+        },
+        {
+          "name": "シナリオが分岐している（50%以上）",
+          "pass": true,
+          "detail": "100%"
+        },
+        {
+          "name": "2030/2040/2050 の三層が揃っている",
+          "pass": true,
+          "detail": "3 シナリオ"
+        },
+        {
+          "name": "反証がこのシステム自身を攻撃している",
+          "pass": true,
+          "detail": "このシステム自体への反証。上の三つの2050年の語りは、失われたもの…"
+        },
+        {
+          "name": "断定的な確率・金額を生成していない",
+          "pass": true,
+          "detail": "正規表現で検査"
+        },
+        {
+          "name": "結論を押し付けていない",
+          "pass": true,
+          "detail": "選択肢への推奨表現を検査"
+        }
+      ],
+      "notices": [
+        {
+          "code": "fallback_overloaded",
+          "message": "生成モデルの呼び出しに失敗したため、以降の工程を脚本エンジンに切り替えました（原因: overloaded）。ここから先はライブ生成ではありません。"
+        }
+      ],
+      "audit": {
+        "claimsTotal": 29,
+        "byKind": {
+          "verified": 4,
+          "inference": 8,
+          "hypothetical": 12,
+          "unknown": 5
+        },
+        "citationsChecked": 19,
+        "citationsRejected": 0,
+        "rejectedIds": [],
+        "rejectedMalformed": [],
+        "rejectedInvented": [],
+        "downgrades": [],
+        "scenarioDivergence": 1,
+        "sourcesUsed": [
+          "stanford-pacs-ai-voice",
+          "jp-forest-sink-target",
+          "jp-ghg-inventory-lulucf",
+          "ipbes-global-assessment",
+          "jp-forest-multifunction",
+          "jp-forest-white-paper",
+          "mit-future-you"
+        ],
+        "mode": "scripted",
+        "model": "scripted:forest-v1 (hand-written, no model call) (fallback)",
+        "elapsedMs": 38527
+      }
     }
   ]
 }
