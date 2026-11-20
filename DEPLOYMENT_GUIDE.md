@@ -138,12 +138,31 @@ curl -s https://<your-domain>/api/health
 
 ## iCloud Drive 上で作業する場合の注意
 
-このプロジェクトは iCloud Drive 配下にあります。`.next` の同期衝突で
-`routes.d 2.ts` のような重複ファイルが生成され、型チェックが
-`Duplicate identifier` で落ちることがあります。
+このプロジェクトは iCloud Drive 配下にあります。観測した問題が二つあります。
+
+**1. `.next` の同期衝突で重複ファイルが生成される。**
+`routes.d 2.ts` のようなファイルができ、型チェックが `Duplicate identifier` で落ちます。
+
+**2. 増分ビルドが古いCSSを配信することがある。**
+`globals.css` を変更して `npm run build` を実行しても、
+Turbopack の永続キャッシュが更新を取りこぼし、**古い CSS チャンクが配信されました**。
+iCloud の mtime の扱いがキャッシュの無効化判定と噛み合っていないことが原因と見られます。
+
+どちらも `.next` の削除で解消します。
 
 ```bash
 npm run clean
 ```
 
-で `.next` と重複ファイルを削除できます。
+`rm: .next: Directory not empty` で失敗する場合（同期中に起きます）、
+一度リネームしてから消してください。
+
+```bash
+mv .next .next-stale && rm -rf .next-stale
+```
+
+**スタイルを変更したあとは、増分ビルドを信用せず、配信されている CSS を確認してください。**
+
+```bash
+curl -s http://127.0.0.1:3100/deliberate | grep -o '/_next/static/[^"]*\.css'
+```

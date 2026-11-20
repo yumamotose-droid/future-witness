@@ -55,8 +55,10 @@ Test Files  8 passed (8)
 ## 3. E2Eテスト（Playwright、本番ビルドに対して）
 
 ```
-18 passed (40.0s)
+18 passed (52.7s)
 ```
+
+（クリーンビルド後の最終実行。スタンプの可読性修正を含む版で再実行しています。）
 
 - **desktop**: Chromium 1280×720
 - **mobile**: WebKit / iPhone 13 プリセット（375×812）

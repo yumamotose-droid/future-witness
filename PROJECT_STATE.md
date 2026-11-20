@@ -93,9 +93,11 @@ npm audit        → 0 vulnerabilities
 
 ## 環境メモ
 
-- 作業ディレクトリは iCloud Drive 配下。`.next` の同期衝突で
-  `*.d 2.ts` のような重複が生じ、型チェックが落ちることがある。
-  `npm run clean` で解消する。
+- 作業ディレクトリは iCloud Drive 配下。**二つの問題を実際に踏んだ**:
+  (1) `.next` の同期衝突で `*.d 2.ts` のような重複が生じ、型チェックが落ちる。
+  (2) **増分ビルドが古いCSSチャンクを配信した**（`globals.css` の変更が反映されず、
+  クリーンビルドで解消）。スタイル変更後は配信CSSを `curl` で確認すること。
+  `npm run clean`、失敗する場合は `mv .next .next-stale && rm -rf .next-stale`。
 - Playwright の chromium / webkit はインストール済み。
 - `RATE_LIMIT_CAPACITY=500` は Playwright の `webServer` 設定内のみ。
   本番環境には設定しないこと。
