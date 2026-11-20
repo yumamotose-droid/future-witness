@@ -60,6 +60,54 @@ const PER_MODEL_TIMEOUT_MS = 12_000;
  */
 const busyUntil = new Map<string, number>();
 const BUSY_COOLDOWN_MS = 60_000;
+/**
+ * A timeout is weaker evidence than a 503. The request's own size can cause
+ * one, so a single timeout must not take a model out of service for every
+ * other request in this process. Two in a row, and a shorter cooldown.
+ */
+const TIMEOUT_COOLDOWN_MS = 20_000;
+const TIMEOUT_STRIKES = 2;
+const timeoutStrikes = new Map<string, number>();
+
+function markBusy(model: string, code: string): void {
+  if (code === "overloaded" || code === "rate_limited") {
+    // Upstream said it has no capacity. Believe it.
+    busyUntil.set(model, Date.now() + BUSY_COOLDOWN_MS);
+    timeoutStrikes.delete(model);
+    return;
+  }
+  const strikes = (timeoutStrikes.get(model) ?? 0) + 1;
+  if (strikes >= TIMEOUT_STRIKES) {
+    busyUntil.set(model, Date.now() + TIMEOUT_COOLDOWN_MS);
+    timeoutStrikes.delete(model);
+  } else {
+    timeoutStrikes.set(model, strikes);
+  }
+}
+
+/**
+ * A hard ceiling that does not depend on the callee's cooperation.
+ *
+ * `AbortSignal` is a request, not a guarantee: a call already streaming a
+ * response body can ignore it, and a live run measured 32 minutes against a
+ * declared 110s budget because of exactly that. Racing a timer bounds the wait
+ * whatever the SDK does. The losing promise keeps running, so its rejection is
+ * handled here to avoid an unhandled rejection; its abort signal is already
+ * firing, so it will wind down on its own.
+ */
+export function withHardLimit<T>(work: Promise<T>, ms: number, label: string): Promise<T> {
+  work.catch(() => {});
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const limit = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new ProviderError(`${label} did not answer within ${ms}ms`, "timeout", true)),
+      ms,
+    );
+  });
+  return Promise.race([work, limit]).finally(() => {
+    if (timer) clearTimeout(timer);
+  }) as Promise<T>;
+}
 
 function available(models: string[], now = Date.now()): string[] {
   const free = models.filter((m) => (busyUntil.get(m) ?? 0) <= now);
@@ -134,8 +182,13 @@ export function createGeminiProvider(
         ? AbortSignal.any([outer, perModel])
         : perModel;
       try {
-        const result = await attempt(candidate, signal);
+        const result = await withHardLimit(
+          attempt(candidate, signal),
+          PER_MODEL_TIMEOUT_MS,
+          candidate,
+        );
         model = candidate;
+        timeoutStrikes.delete(candidate);
         return result;
       } catch (error) {
         // The run's own deadline is not something another model can fix.
@@ -146,7 +199,7 @@ export function createGeminiProvider(
           mapped.code === "rate_limited" ||
           mapped.code === "timeout";
         if (!movable) throw mapped;
-        busyUntil.set(candidate, Date.now() + BUSY_COOLDOWN_MS);
+        markBusy(candidate, mapped.code);
         last = mapped;
       }
     }
@@ -221,6 +274,7 @@ export function createGeminiProvider(
 /** Test seam, and a way for an operator to clear the cooldown deliberately. */
 export function clearBusyModels(): void {
   busyUntil.clear();
+  timeoutStrikes.clear();
 }
 
 export function geminiConfigured(): boolean {
