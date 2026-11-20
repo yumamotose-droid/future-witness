@@ -47,6 +47,8 @@ interface RunReport {
   outputChars: number;
   estTokens: number;
   checks: Check[];
+  /** Why a live run fell back, when it did. Without this a degrade is silent. */
+  notices: { code: string; message: string }[];
   audit?: Record<string, unknown>;
   error?: string;
 }
@@ -81,7 +83,7 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
     return {
       id: q.id, domain: q.domain, question: q.text,
       mode: "crashed", model: "-", elapsedMs: Date.now() - started,
-      outputChars: 0, estTokens: 0, checks: [],
+      outputChars: 0, estTokens: 0, checks: [], notices: [],
       error: error instanceof Error ? error.message : String(error),
     };
   }
@@ -177,6 +179,10 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
     outputChars: text.length,
     estTokens: estimateTokens(text),
     checks,
+    notices: events
+      .filter((e) => e.type === "notice")
+      .map((e) => (e.type === "notice" ? { code: e.code, message: e.messageJa } : null))
+      .filter(Boolean) as { code: string; message: string }[],
     audit: a as unknown as Record<string, unknown>,
   };
 }
@@ -189,11 +195,15 @@ for (const q of QUESTIONS.slice(0, limit)) {
   reports.push(r);
   const failed = r.checks.filter((c) => !c.pass);
   const mark = r.error ? "CRASH" : failed.length === 0 ? "PASS " : "FAIL ";
+  const stayedLive = String((r.audit?.mode as string) ?? r.mode) === "live";
   console.log(
     `${mark} ${r.id} [${r.domain}] ${String(r.elapsedMs).padStart(6)}ms  ` +
-    `${r.checks.length - failed.length}/${r.checks.length}  ${r.question.slice(0, 26)}…`,
+    `${r.checks.length - failed.length}/${r.checks.length}  ` +
+    `${live ? (stayedLive ? "live " : "退避 ") : ""}${r.question.slice(0, 22)}…`,
   );
   for (const f of failed) console.log(`        ✗ ${f.name} — ${f.detail}`);
+  for (const n of r.notices.filter((x) => x.code !== "no_api_key"))
+    console.log(`        ⤷ ${n.code}`);
   if (r.error) console.log(`        ✗ ${r.error}`);
 }
 
@@ -217,7 +227,9 @@ const medianMs = [...reports.map((r) => r.elapsedMs)].sort((a, b) => a - b)[
 ];
 
 console.log(`\n${"─".repeat(58)}`);
+const stayed = reports.filter((r) => String((r.audit?.mode as string) ?? "") === "live").length;
 console.log(`完全通過した質問: ${cleanRuns} / ${reports.length}`);
+if (live) console.log(`最後までライブ:   ${stayed} / ${reports.length}（残りは予算・混雑で脚本へ退避）`);
 console.log(`検査項目:         ${passed} / ${totalChecks}`);
 console.log(`所要時間の中央値: ${medianMs}ms`);
 console.log(`出力の推定トークン合計: ${totalTokens.toLocaleString()}`);

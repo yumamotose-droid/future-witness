@@ -76,6 +76,10 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
   ): Promise<z.infer<T>> {
     const jsonSchema = toJsonSchema(schema);
     let lastError = "";
+    // Keep the last provider failure so congestion is not reported as a
+    // malformed response. Three 503s in a row used to surface as
+    // "invalid_output", which sends anyone debugging it to the schema.
+    let lastProviderError: ProviderError | undefined;
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const useSchema = attempt < 2 ? jsonSchema : undefined;
       const body = lastError
@@ -99,6 +103,7 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
           .join("; ");
       } catch (error) {
         if (error instanceof ProviderError && !error.retryable) throw error;
+        if (error instanceof ProviderError) lastProviderError = error;
         lastError = error instanceof Error ? error.message : String(error);
         // Wait before trying a busy or rate-limited model again. Immediate
         // retries against congestion fail again and spend the run's clock.
@@ -111,6 +116,15 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
           await new Promise((resolve) => setTimeout(resolve, waitMs));
         }
       }
+    }
+    // Report what actually went wrong. If every attempt failed at the
+    // provider, that is the failure — not the shape of a response we never got.
+    if (lastProviderError) {
+      throw new ProviderError(
+        `${lastProviderError.code} が続いたため、この工程を完了できませんでした: ${lastError}`,
+        lastProviderError.code,
+        false,
+      );
     }
     throw new ProviderError(
       `構造化出力の検証に失敗しました: ${lastError}`,
