@@ -76,7 +76,9 @@ npm audit        → 0 vulnerabilities
 ## 残タスク（人間の操作が必要）
 
 1. **Gemini API キーの取得と `.env.local` への設定** → ライブ実行の初回検証
-2. **GitHub リポジトリの作成とプッシュ**（`gh repo create` の手順は DEPLOYMENT_GUIDE）
+2. ~~GitHub リポジトリの作成とプッシュ~~ → **完了**（private）。
+   <https://github.com/yumamotose-droid/future-witness>
+   残るのは **public にするかの判断**（公開は不可逆。成果物URLとして出すなら必要）
 3. **Vercel アカウント／プロジェクトの作成とデプロイ**
 4. **90秒デモ動画の撮影とYouTube限定公開**（台本は `DEMO_SCRIPT_JP.md`）
 5. **Google AI Challenge への応募**（締切 2026-11-30 23:59）と**全文規約の確認**

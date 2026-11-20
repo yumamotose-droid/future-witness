@@ -77,9 +77,20 @@ npm run start -- --port 3100
 
 ## 4. GitHub リポジトリ
 
-**未作成。** `gh` は `yumamotose-droid` で認証済みですが、
-リポジトリ作成は外部サービスへの新規作成にあたるため実行していません。
-手順は `DEPLOYMENT_GUIDE.md` に記載しています。
+**作成済み（private）**: <https://github.com/yumamotose-droid/future-witness>
+
+9コミット・114ファイルをプッシュ済み。プッシュ前に全履歴を走査し、
+APIキー・トークン・個人のメールアドレスが含まれないことを確認しています。
+追跡されている環境ファイルは `.env.example` のみで、`node_modules`、`.next`、
+Playwright のレポートは除外されています。証跡スクリーンショット19枚は
+意図的に含めています。
+
+**public ではありません。** 公開は不可逆な操作のため、本人の判断に残しました。
+コンテストの成果物URLとして審査員に見せる場合は公開が必要です。
+
+```bash
+gh repo edit yumamotose-droid/future-witness --visibility public
+```
 
 ## 5. 採用した技術
 
@@ -155,7 +166,7 @@ SCAツールの導入、認証がないことによる濫用時の帰属不能�
 | # | 操作 | 理由 |
 | --- | --- | --- |
 | 1 | Gemini API キーの取得と設定 | 認証情報の新規取得 |
-| 2 | GitHub リポジトリの作成とプッシュ | 外部サービスへの新規作成・公開 |
+| 2 | リポジトリを public にするか判断する | 公開は不可逆。作成とプッシュは完了済み |
 | 3 | Vercel アカウント／プロジェクト作成とデプロイ | 同上 |
 | 4 | 90秒デモ動画の撮影とYouTube限定公開 | 同上 |
 | 5 | Google AI Challenge への応募 | 正式応募は応募者本人の行為 |

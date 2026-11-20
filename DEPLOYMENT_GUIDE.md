@@ -10,7 +10,7 @@
 | ローカル本番サーバー | 動作確認済み（`npm run start`） |
 | `GEMINI_API_KEY` | **未保有**。脚本モードで完走する |
 | GitHub CLI | 認証済み（`yumamotose-droid`） |
-| GitHub リポジトリ | **未作成**（本人の操作が必要） |
+| GitHub リポジトリ | **作成済み・private**: <https://github.com/yumamotose-droid/future-witness> |
 | Vercel CLI | **未インストール** |
 | Vercel プロジェクト | **未作成**（本人の操作が必要） |
 | Supabase CLI | インストール済み（v2.122.0）。プロジェクトは未作成・不要 |
