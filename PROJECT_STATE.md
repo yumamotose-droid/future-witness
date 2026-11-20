@@ -9,7 +9,7 @@
 
 ```
 npm run verify   → PASS（型0・Lint0・単体60件・本番ビルド成功）
-npm run test:e2e → 20 passed (35.7s)
+npm run test:e2e → 20 passed (2.4m)
 npm audit        → 0 vulnerabilities
 ```
 

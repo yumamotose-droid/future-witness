@@ -54,9 +54,19 @@ export function detectScript(question: string, topicKey?: string): ScriptKind {
   return hits >= 2 ? "curated" : "derived";
 }
 
+/**
+ * Pacing for the scripted testimony.
+ *
+ * This was 7 characters every 22ms — about 320 characters a second, which
+ * finished a 200-character testimony in under a second. The design intent is
+ * that this one passage slows the reader down, and at that speed it did not:
+ * by the time you scrolled to it, it was already written. Roughly 55 characters
+ * a second is still faster than reading, but the writing is visible and the
+ * passage lands as something being said rather than something already printed.
+ */
 async function* streamString(
   text: string,
-  { chunk = 7, delayMs = 22 }: { chunk?: number; delayMs?: number } = {},
+  { chunk = 3, delayMs = 55 }: { chunk?: number; delayMs?: number } = {},
 ): AsyncIterable<string> {
   for (let i = 0; i < text.length; i += chunk) {
     if (delayMs > 0) {
@@ -570,7 +580,7 @@ export function createScriptedEngine(
   kind: ScriptKind,
   { instant = false }: { instant?: boolean } = {},
 ): DeliberationEngine {
-  const delayMs = instant ? 0 : 22;
+  const delayMs = instant ? 0 : 55;
 
   return {
     mode: "scripted",
