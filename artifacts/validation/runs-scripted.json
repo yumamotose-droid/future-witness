@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T09:54:32.415Z",
+  "at": "2026-11-20T13:59:35.795Z",
   "live": false,
   "realtime": false,
   "reports": [
@@ -206,7 +206,7 @@
       "question": "河川の堤防を高くするために、河畔林を伐採するべきか？",
       "mode": "scripted",
       "model": "scripted:forest-v1 (hand-written, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3742,
       "estTokens": 3460,
       "checks": [
@@ -295,7 +295,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:forest-v1 (hand-written, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     },
     {
@@ -715,7 +715,7 @@
       "question": "原子力発電所の運転期間を60年に延長するべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3034,
       "estTokens": 2788,
       "checks": [
@@ -809,7 +809,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     },
     {
@@ -923,7 +923,7 @@
       "question": "築50年の公民館を建て替えるべきか、近隣施設に統合するべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3125,
       "estTokens": 2888,
       "checks": [
@@ -1017,7 +1017,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     },
     {
@@ -1125,7 +1125,7 @@
       "question": "浸水リスクの高い地域で、被災した住宅の同じ場所での再建を認めるべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3051,
       "estTokens": 2853,
       "checks": [
@@ -1213,7 +1213,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     },
     {
@@ -1222,7 +1222,7 @@
       "question": "児童数の減少を理由に、小中学校の統廃合を進めるべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 0,
+      "elapsedMs": 1,
       "outputChars": 3101,
       "estTokens": 2859,
       "checks": [
@@ -1316,7 +1316,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 0
+        "elapsedMs": 1
       }
     },
     {
@@ -1427,7 +1427,7 @@
       "question": "大学の授業料を無償化し、その財源を将来世代の税で賄うべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 0,
+      "elapsedMs": 1,
       "outputChars": 3118,
       "estTokens": 2941,
       "checks": [
@@ -1521,7 +1521,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 0
+        "elapsedMs": 1
       }
     },
     {
@@ -1632,7 +1632,7 @@
       "question": "国債を増発して、いまの社会保障の水準を維持するべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3019,
       "estTokens": 2793,
       "checks": [
@@ -1727,7 +1727,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     },
     {
@@ -1736,7 +1736,7 @@
       "question": "地方への交付金を、人口減少が進む地域に集中させるべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 0,
+      "elapsedMs": 1,
       "outputChars": 3120,
       "estTokens": 2901,
       "checks": [
@@ -1829,7 +1829,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 0
+        "elapsedMs": 1
       }
     },
     {
@@ -1838,7 +1838,7 @@
       "question": "企業への脱炭素規制を今すぐ強化するべきか、10年かけて段階的に導入するべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 0,
+      "elapsedMs": 1,
       "outputChars": 3050,
       "estTokens": 2827,
       "checks": [
@@ -1927,7 +1927,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 0
+        "elapsedMs": 1
       }
     },
     {
@@ -1936,7 +1936,7 @@
       "question": "上下水道の更新費用を、いまの利用者の料金値上げで賄うべきか？",
       "mode": "scripted",
       "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-      "elapsedMs": 1,
+      "elapsedMs": 0,
       "outputChars": 3025,
       "estTokens": 2799,
       "checks": [
@@ -2030,7 +2030,7 @@
         ],
         "mode": "scripted",
         "model": "scripted:derived-v1 (templates + retrieved corpus, no model call)",
-        "elapsedMs": 1
+        "elapsedMs": 0
       }
     }
   ]
