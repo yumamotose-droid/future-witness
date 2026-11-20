@@ -44,6 +44,10 @@ export const MODEL_FALLBACKS = [
  * otherwise the chain itself spends the run's whole budget.
  */
 const PER_MODEL_TIMEOUT_MS = 12_000;
+/** No chunk for this long means the body has stalled. */
+const STREAM_IDLE_LIMIT_MS = 15_000;
+/** A whole response body may not outlast this, however steadily it trickles. */
+const STREAM_TOTAL_LIMIT_MS = 60_000;
 
 /**
  * Models known to be busy, and when to try them again.
@@ -259,13 +263,42 @@ export function createGeminiProvider(
           },
         });
       }, req.signal);
+      // Getting the stream is bounded by withFallback; reading it was not.
+      // A response body that trickles ignores its abort signal just as a
+      // hanging request does, and a live run spent nine minutes here. Each
+      // chunk gets an idle ceiling, and the whole body a total one.
+      const iterator = (stream as AsyncIterable<{ text?: string }>)[
+        Symbol.asyncIterator
+      ]();
+      const openedAt = Date.now();
       try {
-        for await (const chunk of stream) {
-          const text = chunk.text;
+        for (;;) {
+          const remaining = STREAM_TOTAL_LIMIT_MS - (Date.now() - openedAt);
+          if (remaining <= 0) {
+            throw new ProviderError(
+              `stream ran past ${STREAM_TOTAL_LIMIT_MS}ms`,
+              "timeout",
+              true,
+            );
+          }
+          const next = await withHardLimit(
+            Promise.resolve(iterator.next()),
+            Math.min(STREAM_IDLE_LIMIT_MS, remaining),
+            `${model} stream`,
+          );
+          if (next.done) break;
+          const text = next.value?.text;
           if (text) yield text;
         }
       } catch (error) {
-        throw mapError(error);
+        throw error instanceof ProviderError ? error : mapError(error);
+      } finally {
+        // Tell the stream to wind down; it may already be gone.
+        try {
+          await iterator.return?.();
+        } catch {
+          /* nothing left to close */
+        }
       }
     },
   };
