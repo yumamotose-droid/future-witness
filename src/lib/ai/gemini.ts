@@ -43,7 +43,30 @@ export const MODEL_FALLBACKS = [
  * fallback chain is only useful if a silent model is abandoned quickly —
  * otherwise the chain itself spends the run's whole budget.
  */
-const PER_MODEL_TIMEOUT_MS = 20_000;
+const PER_MODEL_TIMEOUT_MS = 12_000;
+
+/**
+ * Models known to be busy, and when to try them again.
+ *
+ * Without this, every step of a run re-walks the whole chain against a tier
+ * that is uniformly overloaded, and a deliberation spends its entire 110s
+ * budget discovering the same thing nine times. Remembering the answer for a
+ * minute lets the run give up in seconds and fall back to the scripted
+ * engine, which is a far better thing to hand a reader than two minutes of
+ * waiting followed by the same result.
+ *
+ * Process-local and deliberately short: congestion clears on its own, and a
+ * stale entry would keep a recovered model out of service.
+ */
+const busyUntil = new Map<string, number>();
+const BUSY_COOLDOWN_MS = 60_000;
+
+function available(models: string[], now = Date.now()): string[] {
+  const free = models.filter((m) => (busyUntil.get(m) ?? 0) <= now);
+  // If everything is marked busy, try the preferred one anyway: the cooldown
+  // is a hint, not a fact, and refusing to call at all would be worse.
+  return free.length > 0 ? free : models.slice(0, 1);
+}
 
 function modelChain(preferred: string): string[] {
   const configured = process.env.GEMINI_MODEL_FALLBACKS?.split(",")
@@ -102,7 +125,7 @@ export function createGeminiProvider(
     attempt: (m: string, signal: AbortSignal) => Promise<T>,
     outer?: AbortSignal,
   ): Promise<T> {
-    const order = [model, ...chain.filter((m) => m !== model)];
+    const order = available([model, ...chain.filter((m) => m !== model)]);
     let last: ProviderError | undefined;
     for (const candidate of order) {
       if (outer?.aborted) break;
@@ -123,6 +146,7 @@ export function createGeminiProvider(
           mapped.code === "rate_limited" ||
           mapped.code === "timeout";
         if (!movable) throw mapped;
+        busyUntil.set(candidate, Date.now() + BUSY_COOLDOWN_MS);
         last = mapped;
       }
     }
@@ -192,6 +216,11 @@ export function createGeminiProvider(
       }
     },
   };
+}
+
+/** Test seam, and a way for an operator to clear the cooldown deliberately. */
+export function clearBusyModels(): void {
+  busyUntil.clear();
 }
 
 export function geminiConfigured(): boolean {

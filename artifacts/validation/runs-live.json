@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T16:42:51.073Z",
+  "at": "2026-11-20T16:55:54.548Z",
   "live": true,
   "realtime": false,
   "reports": [
@@ -9,9 +9,9 @@
       "question": "経済発展のために森林を切り開き、大型商業施設を建設するべきか？",
       "mode": "live",
       "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 44900,
-      "outputChars": 3049,
-      "estTokens": 2916,
+      "elapsedMs": 52778,
+      "outputChars": 3607,
+      "estTokens": 3339,
       "checks": [
         {
           "name": "完走した",
@@ -31,7 +31,7 @@
         {
           "name": "投票できない当事者を挙げた",
           "pass": true,
-          "detail": "将来世代 / 森林生態系および非人間生命"
+          "detail": "2050年にこの地域で暮らす人 / まだ生まれていない世代 / その斜面に依存する生物"
         },
         {
           "name": "不正な出典が1件残らず削除・格下げされた",
@@ -46,12 +46,12 @@
         {
           "name": "情報不足を最低1つ述べた",
           "pass": true,
-          "detail": "unknown 5 件"
+          "detail": "unknown 6 件"
         },
         {
           "name": "仮想シナリオが事実と分離されている",
           "pass": true,
-          "detail": "verified 8 / hypothetical 13"
+          "detail": "verified 8 / hypothetical 12"
         },
         {
           "name": "シナリオが分岐している（50%以上）",
@@ -66,7 +66,7 @@
         {
           "name": "反証がこのシステム自身を攻撃している",
           "pass": true,
-          "detail": "該当あり"
+          "detail": "このシステム自体への反証。上の三つの2050年の語りは、失われたもの…"
         },
         {
           "name": "断定的な確率・金額を生成していない",
@@ -79,16 +79,21 @@
           "detail": "選択肢への推奨表現を検査"
         }
       ],
-      "notices": [],
+      "notices": [
+        {
+          "code": "fallback_timeout",
+          "message": "生成モデルの呼び出しに失敗したため、以降の工程を脚本エンジンに切り替えました（原因: timeout）。ここから先はライブ生成ではありません。"
+        }
+      ],
       "audit": {
-        "claimsTotal": 32,
+        "claimsTotal": 36,
         "byKind": {
           "verified": 8,
-          "inference": 6,
-          "hypothetical": 13,
-          "unknown": 5
+          "inference": 10,
+          "hypothetical": 12,
+          "unknown": 6
         },
-        "citationsChecked": 26,
+        "citationsChecked": 28,
         "citationsRejected": 0,
         "rejectedIds": [],
         "rejectedMalformed": [],
@@ -96,15 +101,17 @@
         "downgrades": [],
         "scenarioDivergence": 1,
         "sourcesUsed": [
-          "jp-forest-multifunction",
-          "future-design-saijo",
-          "stanford-pacs-ai-voice",
+          "jp-forest-white-paper",
           "jp-ghg-inventory-lulucf",
-          "jp-forest-sink-target"
+          "jp-forest-multifunction",
+          "ipbes-global-assessment",
+          "jp-forest-sink-target",
+          "stanford-pacs-ai-voice",
+          "mit-future-you"
         ],
-        "mode": "live",
-        "model": "gemini-3.1-flash-lite",
-        "elapsedMs": 44900
+        "mode": "scripted",
+        "model": "scripted:forest-v1 (hand-written, no model call) (fallback)",
+        "elapsedMs": 52778
       }
     }
   ]
