@@ -1,3 +1,13 @@
+# AGENTS.md
+
+**Read [CLAUDE.md](CLAUDE.md) first.** It holds this project's non-negotiable
+rules — never fabricate a citation, never present scripted output as live,
+keep the four epistemic kinds structural, the system does not recommend — plus
+the commands and the house style. The Next.js 16 notes below are framework
+guidance from the scaffold and still apply.
+
+---
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

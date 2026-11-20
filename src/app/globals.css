@@ -159,11 +159,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.375rem;
-  height: 1.375rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border: 1px solid currentColor;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   letter-spacing: 0;
   line-height: 1;
   flex: none;
@@ -172,7 +172,11 @@ body {
 
 .stamp[data-kind="verified"] {
   color: var(--kind-verified);
-  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 3px currentColor;
+  /* The double ring marks the strongest claim. Kept tight so the die stays
+     legible: the stamp is the one thing on the page nobody may misread. */
+  box-shadow:
+    inset 0 0 0 1.5px var(--paper),
+    inset 0 0 0 2.5px currentColor;
 }
 .stamp[data-kind="inference"] {
   color: var(--kind-inference);
