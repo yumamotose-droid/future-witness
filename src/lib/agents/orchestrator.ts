@@ -20,7 +20,7 @@ import {
   type VerificationOutcome,
 } from "@/lib/evidence/verify";
 import { sanitizeQuestion } from "@/lib/security/sanitize";
-import { budgetStop, openLedger } from "@/lib/security/budget";
+import { BUDGET, budgetStop, openLedger } from "@/lib/security/budget";
 import { createGeminiProvider, geminiConfigured } from "@/lib/ai/gemini";
 import { createLiveEngine } from "./engine-live";
 import { createScriptedEngine, detectScript } from "./engine-scripted";
@@ -68,6 +68,22 @@ export async function* runDeliberation(
   const question = sanitizeQuestion(input.question);
   const hits = retrieveSources(question);
 
+  /**
+   * A hard deadline, enforced on the model calls themselves.
+   *
+   * Checking the budget between steps is not enough: a step that retries a
+   * congested model, with waits between attempts, can run long on its own. A
+   * live run was measured at 148s against a declared ceiling of 110s, which
+   * the serverless function would have killed mid-stream. Aborting at the
+   * deadline means the run degrades and finishes rather than being cut off.
+   */
+  const deadline = new AbortController();
+  const deadlineTimer = setTimeout(
+    () => deadline.abort(),
+    Math.max(1_000, BUDGET.maxRunMs - (Date.now() - startedAt)),
+  );
+  options.signal?.addEventListener("abort", () => deadline.abort());
+
   const ctx: RunContext = {
     runId,
     question,
@@ -76,7 +92,7 @@ export async function* runDeliberation(
     corpusText: renderCorpusForPrompt(hits),
     voiceTexts: [],
     ledger: openLedger(startedAt),
-    signal: options.signal,
+    signal: deadline.signal,
   };
 
   const wantLive =
@@ -99,6 +115,20 @@ export async function* runDeliberation(
   async function* step<T>(
     run: (e: DeliberationEngine) => Promise<T>,
   ): AsyncGenerator<StreamEvent, T, void> {
+    // Out of budget before this step even starts: go straight to the scripted
+    // engine, which costs nothing, rather than opening another model call.
+    if (budgetStop(ctx.ledger) && !degraded) {
+      degraded = true;
+      engine = scripted;
+      yield {
+        type: "notice",
+        code: "budget_degraded",
+        messageJa:
+          "実行の予算に達したため、残りの工程を脚本エンジンに切り替えました。ここから先はライブ生成ではありません。",
+        messageEn:
+          "The run reached its budget, so the remaining steps switched to the scripted engine. Everything from here is not live generation.",
+      };
+    }
     try {
       return await run(engine);
     } catch (error) {
@@ -287,5 +317,7 @@ export async function* runDeliberation(
       messageJa: `実行を完了できませんでした: ${message}`,
       messageEn: `The run could not be completed: ${message}`,
     };
+  } finally {
+    clearTimeout(deadlineTimer);
   }
 }
