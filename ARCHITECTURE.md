@@ -90,6 +90,22 @@ failure never silently becomes a shorter deliberation.
 The result is that the 証 stamp means exactly one thing: at least one id on
 this sentence resolves to a finding a human put in the corpus.
 
+## The two languages
+
+A `Claim` carries `text` (Japanese, primary) and an optional `textEn`. Both are
+produced in the same call, validated by the same schema, and verified together,
+so switching language cannot change which citations resolved or which claim was
+downgraded — only the words.
+
+Narration is different. A run streams in the language it was started in, and
+`voice-end` carries `bodyAlt` when the engine already has the other language
+written. The scripted engine does; a live model writes one language only. The
+client remembers the run's language as `runLang`, and when the reader switches
+to a language with no alternate the panel shows the testimony as generated and
+says which language it is in. **Nothing is machine-translated at render time** —
+a translated testimony would be a different testimony, and the epistemic label
+on it would no longer mean what it says.
+
 ## Provider abstraction
 
 ```ts

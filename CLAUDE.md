@@ -38,11 +38,18 @@ npm run dev          # development server on :3000
 npm run build        # production build (must pass before any claim of done)
 npm run start        # serve the production build
 npm run lint         # eslint, zero warnings allowed
-npm run typecheck    # tsc --noEmit
+npm run typecheck    # next typegen && tsc --noEmit
 npm run test         # vitest unit suite
 npm run test:e2e     # playwright, builds and serves production
 npm run verify       # typecheck + lint + test + build
+
+npm run docs:sources # DATA_SOURCES.md をコーパスから再生成
+npm run shots        # artifacts/screenshots を撮り直す（先に npm run start）
+npm run clean        # .next と iCloud の重複ファイルを消す
 ```
+
+`typecheck` は `next typegen` を先に走らせます。ルート型は `.next` に生成されるため、
+クリーンな作業コピーでも型チェックが通るようにするためです。
 
 ## Layout
 
@@ -57,6 +64,9 @@ src/app/api/deliberate/     the SSE pipeline endpoint
 src/components/             presentation; no business logic
 tests/unit/                 vitest
 tests/e2e/                  playwright, run against a production build
+scripts/                    DATA_SOURCES.md generation, screenshot capture
+supabase/schema.sql         optional history; RLS on, no policy
+artifacts/screenshots/      evidence images referenced by TEST_REPORT and the deck
 ```
 
 ## House style
