@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import type { Lang, Scenario, Voice } from "@/lib/types";
 import { t } from "@/lib/i18n/dictionary";
 import { Stamp } from "./Stamp";
@@ -13,6 +19,86 @@ import { Stamp } from "./Stamp";
  * in words underneath — a narrative is the easiest thing on this page to
  * mistake for a forecast, so it carries the heaviest labelling.
  */
+/**
+ * Reveals the testimony at reading pace.
+ *
+ * The deliberation starts as soon as the page loads, so by the time a reader
+ * has recorded their position at the gate the narrative has already arrived in
+ * full. Rendering it instantly threw away the one moment on the page that is
+ * meant to slow somebody down. This advances the visible text at roughly the
+ * speed it was streamed, whether it is still arriving or was buffered while
+ * the reader was elsewhere.
+ *
+ * It paces presentation, not generation: the words were produced and verified
+ * before any of them appeared.
+ */
+const CHARS_PER_SECOND = 55;
+
+const noSubscribe = () => () => {};
+
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    noSubscribe,
+    () =>
+      typeof window !== "undefined" &&
+      Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches),
+    () => false,
+  );
+}
+
+function useRevealed(body: string, streaming: boolean): string {
+  const reduce = usePrefersReducedMotion();
+  const [count, setCount] = useState(0);
+  const frame = useRef<number | undefined>(undefined);
+  const startedAt = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (reduce) return;
+    const tick = (now: number) => {
+      startedAt.current ??= now;
+      const elapsed = (now - startedAt.current) / 1000;
+      const next = Math.min(body.length, Math.ceil(elapsed * CHARS_PER_SECOND));
+      setCount(next);
+      if (next < body.length) frame.current = requestAnimationFrame(tick);
+    };
+    frame.current = requestAnimationFrame(tick);
+    return () => {
+      if (frame.current !== undefined) cancelAnimationFrame(frame.current);
+    };
+    // Restart when the passage itself changes (a new run, or a language switch).
+  }, [body, reduce]);
+
+  // Reduced motion gets the whole passage at once; otherwise never show more
+  // than has actually arrived from the server.
+  if (reduce) return body;
+  return body.slice(0, streaming ? Math.min(count, body.length) : count);
+}
+
+function Testimony({
+  body,
+  streaming,
+}: {
+  body: string;
+  streaming: boolean;
+}) {
+  const shown = useRevealed(body, streaming);
+  const writing = shown.length < body.length;
+  return (
+    <blockquote
+      className={`t-display mt-5 text-[0.9375rem] leading-[2.1] text-ink${
+        writing ? " caret" : ""
+      }`}
+      aria-live="off"
+    >
+      {shown}
+      {/* The whole passage stays in the accessibility tree and in the page
+          source, so a screen reader and the decision record are never given a
+          half-written sentence. */}
+      {writing ? <span className="sr-only">{body.slice(shown.length)}</span> : null}
+    </blockquote>
+  );
+}
+
 export function VoicePanel({
   scenarios,
   voices,
@@ -89,13 +175,7 @@ export function VoicePanel({
                 </span>
               </figcaption>
 
-              <blockquote
-                className={`t-display mt-5 text-[0.9375rem] leading-[2.1] text-ink${
-                  streaming ? " caret" : ""
-                }`}
-              >
-                {body}
-              </blockquote>
+              <Testimony body={body} streaming={streaming} />
 
               {untranslated ? (
                 <p className="t-mono mt-3 text-ink-faint">

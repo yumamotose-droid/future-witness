@@ -16,7 +16,7 @@ import { runDeliberation } from "../src/lib/agents/orchestrator.js";
 import { requestSchema } from "../src/lib/agents/schemas.js";
 import { estimateTokens } from "../src/lib/security/budget.js";
 import { QUESTIONS } from "./questions.js";
-import type { StreamEvent, Claim, Scenario } from "../src/lib/types.js";
+import type { StreamEvent, Scenario } from "../src/lib/types.js";
 
 const live = process.argv.includes("--live");
 const realtime = process.argv.includes("--realtime");
@@ -85,10 +85,6 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
   const statements = events.filter((e) => e.type === "statement");
   const errors = events.filter((e) => e.type === "error");
 
-  const allClaims: Claim[] = [
-    ...(framing?.type === "framing" ? framing.data.assumptions : []),
-    ...statements.flatMap((s) => (s.type === "statement" ? s.data.claims : [])),
-  ];
   const a = audit?.type === "audit" ? audit.data : undefined;
   const scen: Scenario[] = scenarios?.type === "scenarios" ? scenarios.data : [];
   const counter = statements.find(

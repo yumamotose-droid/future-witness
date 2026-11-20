@@ -1,0 +1,107 @@
+[
+  {
+    "file": "artifacts/video/captions/01-hero-0.png",
+    "start": 0.25,
+    "end": 4.36
+  },
+  {
+    "file": "artifacts/video/captions/01-hero-1.png",
+    "start": 4.36,
+    "end": 8.46
+  },
+  {
+    "file": "artifacts/video/captions/02-framing-0.png",
+    "start": 9.25,
+    "end": 13.37
+  },
+  {
+    "file": "artifacts/video/captions/02-framing-1.png",
+    "start": 13.37,
+    "end": 17.49
+  },
+  {
+    "file": "artifacts/video/captions/03-stakeholders-0.png",
+    "start": 17.25,
+    "end": 21.68
+  },
+  {
+    "file": "artifacts/video/captions/03-stakeholders-1.png",
+    "start": 21.68,
+    "end": 26.11
+  },
+  {
+    "file": "artifacts/video/captions/04-gate-0.png",
+    "start": 26.25,
+    "end": 30.42
+  },
+  {
+    "file": "artifacts/video/captions/04-gate-1.png",
+    "start": 30.42,
+    "end": 34.59
+  },
+  {
+    "file": "artifacts/video/captions/05-voice-0.png",
+    "start": 34.25,
+    "end": 37.49
+  },
+  {
+    "file": "artifacts/video/captions/05-voice-1.png",
+    "start": 37.49,
+    "end": 40.72
+  },
+  {
+    "file": "artifacts/video/captions/05-voice-2.png",
+    "start": 40.72,
+    "end": 43.96
+  },
+  {
+    "file": "artifacts/video/captions/06-evidence-0.png",
+    "start": 45.25,
+    "end": 49.83
+  },
+  {
+    "file": "artifacts/video/captions/06-evidence-1.png",
+    "start": 49.83,
+    "end": 54.42
+  },
+  {
+    "file": "artifacts/video/captions/07-cores-0.png",
+    "start": 54.25,
+    "end": 58.8
+  },
+  {
+    "file": "artifacts/video/captions/07-cores-1.png",
+    "start": 58.8,
+    "end": 63.34
+  },
+  {
+    "file": "artifacts/video/captions/08-counter-0.png",
+    "start": 63.25,
+    "end": 68.27
+  },
+  {
+    "file": "artifacts/video/captions/08-counter-1.png",
+    "start": 68.27,
+    "end": 73.29
+  },
+  {
+    "file": "artifacts/video/captions/09-audit-0.png",
+    "start": 74.25,
+    "end": 77.9
+  },
+  {
+    "file": "artifacts/video/captions/09-audit-1.png",
+    "start": 77.9,
+    "end": 81.56
+  },
+  {
+    "file": "artifacts/video/captions/09-audit-2.png",
+    "start": 81.56,
+    "end": 85.21
+  },
+  {
+    "file": "artifacts/video/captions/10-close-0.png",
+    "start": 85.25,
+    "end": 89.57
+  }
+]

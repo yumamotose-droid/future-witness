@@ -18,7 +18,12 @@
     "predeploy": "tsx scripts/predeploy-check.mts",
     "verify:sources": "tsx scripts/verify-sources.mts",
     "validate": "tsx scripts/validate-negative.mts && tsx scripts/validate-runs.mts",
-    "validate:live": "tsx scripts/validate-runs.mts --live --realtime"
+    "validate:live": "tsx scripts/validate-runs.mts --live --realtime",
+    "video:narration": "tsx scripts/make-narration.mts",
+    "video:record": "tsx scripts/record-demo.mts",
+    "video:captions": "tsx scripts/render-captions.mts",
+    "video:build": "tsx scripts/build-video.mts",
+    "video": "npm run video:narration && npm run video:record && npm run video:captions && npm run video:build"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",

@@ -44,3 +44,10 @@ next-env.d.ts
 # test evidence and reports (regenerate with `npm run test:e2e` / `npm run shots`)
 /artifacts/playwright-report
 /artifacts/playwright-results
+
+# video intermediates (regenerate with `npm run video`); the finished MP4 is kept
+/artifacts/video/raw
+/artifacts/video/work
+/artifacts/video/captions
+/artifacts/video/screen.webm
+/artifacts/video/narration.wav

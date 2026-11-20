@@ -1,0 +1,75 @@
+{
+  "totalSeconds": 90,
+  "timeline": [
+    {
+      "id": "01-hero",
+      "startSec": 0,
+      "seconds": 9,
+      "rate": 184,
+      "speechSec": 7.310249
+    },
+    {
+      "id": "02-framing",
+      "startSec": 9,
+      "seconds": 8,
+      "rate": 175,
+      "speechSec": 7.344399
+    },
+    {
+      "id": "03-stakeholders",
+      "startSec": 17,
+      "seconds": 9,
+      "rate": 165,
+      "speechSec": 7.955283
+    },
+    {
+      "id": "04-gate",
+      "startSec": 26,
+      "seconds": 8,
+      "rate": 180,
+      "speechSec": 7.437279
+    },
+    {
+      "id": "05-voice",
+      "startSec": 34,
+      "seconds": 11,
+      "rate": 170,
+      "speechSec": 8.807211
+    },
+    {
+      "id": "06-evidence",
+      "startSec": 45,
+      "seconds": 9,
+      "rate": 191,
+      "speechSec": 8.266395
+    },
+    {
+      "id": "07-cores",
+      "startSec": 54,
+      "seconds": 9,
+      "rate": 182,
+      "speechSec": 8.193152
+    },
+    {
+      "id": "08-counter",
+      "startSec": 63,
+      "seconds": 11,
+      "rate": 170,
+      "speechSec": 9.137324
+    },
+    {
+      "id": "09-audit",
+      "startSec": 74,
+      "seconds": 11,
+      "rate": 191,
+      "speechSec": 10.058095
+    },
+    {
+      "id": "10-close",
+      "startSec": 85,
+      "seconds": 5,
+      "rate": 170,
+      "speechSec": 3.420181
+    }
+  ]
+}
