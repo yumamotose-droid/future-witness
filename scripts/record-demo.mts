@@ -24,6 +24,19 @@ rmSync(RAW, { recursive: true, force: true });
 mkdirSync(RAW, { recursive: true });
 
 const started = Date.now();
+
+/**
+ * How long a section may take to appear.
+ *
+ * In scripted mode everything is ready at once and any small number works. A
+ * live run is bound by the run budget instead, so waiting less than that would
+ * abandon a recording the pipeline was still going to complete.
+ */
+const STEP_TIMEOUT_MS = 115_000;
+
+/** When each section actually appeared, to report drift from the narration. */
+const marks: { id: string; atMs: number }[] = [];
+const mark = (id: string) => marks.push({ id, atMs: Date.now() - started });
 const at = (id: string) => {
   let t = 0;
   for (const s of SEGMENTS) {
@@ -83,7 +96,8 @@ await until(at("02-framing") - 0.6);
 
 /* 02 — the question and its premises */
 await page.goto(`${BASE}/deliberate?demo=1`, { waitUntil: "domcontentloaded" });
-await page.getByRole("heading", { name: "この問いが置いている前提" }).waitFor({ timeout: 40_000 });
+await page.getByRole("heading", { name: "この問いが置いている前提" }).waitFor({ timeout: STEP_TIMEOUT_MS });
+mark("framing");
 await glide(page, page.getByRole("heading", { name: "この問いが置いている前提" }));
 await until(at("03-stakeholders"));
 
@@ -92,7 +106,8 @@ await glide(page, page.getByRole("heading", { name: "影響を受ける人と、
 await until(at("04-gate"));
 
 /* 04 — record your position before seeing any output */
-await page.getByRole("heading", { name: "はじめに、いまのあなたの立場" }).waitFor({ timeout: 40_000 });
+await page.getByRole("heading", { name: "はじめに、いまのあなたの立場" }).waitFor({ timeout: STEP_TIMEOUT_MS });
+mark("gate");
 await glide(page, page.getByRole("heading", { name: "はじめに、いまのあなたの立場" }), 1200);
 await until(at("04-gate") + 3.6);
 await page.getByRole("radio").first().check();
@@ -101,38 +116,65 @@ await page.getByRole("button", { name: "立場を記録する" }).click();
 
 /* 05 — evidence with its limits */
 await page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" })
-  .waitFor({ timeout: 40_000 });
+  .waitFor({ timeout: STEP_TIMEOUT_MS });
+  mark("evidence");
 await glide(page, page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" }), 1300);
 await until(at("07-cores"));
 
 /* 06 — the core samples */
-await page.getByRole("heading", { name: "未来のコア標本" }).waitFor({ timeout: 40_000 });
+await page.getByRole("heading", { name: "未来のコア標本" }).waitFor({ timeout: STEP_TIMEOUT_MS });
+mark("cores");
 await glide(page, page.getByRole("heading", { name: "未来のコア標本" }), 1300);
 await until(at("07-cores") + 4.5);
 await page.mouse.wheel(0, 260);
 await until(at("05-voice"));
 
 /* 07 — the testimony, caught while it is still being written */
-await page.getByText("MIRAI").first().waitFor({ timeout: 40_000 });
+await page.getByText("MIRAI").first().waitFor({ timeout: STEP_TIMEOUT_MS });
+mark("voice");
 await glide(page, page.getByText("MIRAI").first(), 900);
 await until(at("08-counter"));
 
 /* 08 — the objection, including to ourselves */
 await page.getByRole("heading", { name: "ここまでの全体に対する反証" })
-  .waitFor({ timeout: 40_000 });
+  .waitFor({ timeout: STEP_TIMEOUT_MS });
+  mark("counter");
 await glide(page, page.getByRole("heading", { name: "ここまでの全体に対する反証" }), 1300);
 await until(at("08-counter") + 5.0);
 await page.mouse.wheel(0, 300);
 await until(at("09-audit"));
 
 /* 09 — the verification record */
-await page.getByRole("heading", { name: "検証記録" }).waitFor({ timeout: 40_000 });
+await page.getByRole("heading", { name: "検証記録" }).waitFor({ timeout: STEP_TIMEOUT_MS });
+mark("audit");
 await glide(page, page.getByRole("heading", { name: "検証記録" }), 1300);
 await until(at("10-close"));
 
 /* 10 — the decision returns to the reader */
 await glide(page, page.getByRole("heading", { name: "審議を終えて、いまのあなたの立場" }), 1100);
 await until(TOTAL_SECONDS);
+
+// What the narration expects versus when the page actually got there. In live
+// mode this is the number that decides whether the clock is realistic.
+console.log("\n区間ごとの到達時刻（ナレーション基準との差）");
+const expected: Record<string, string> = {
+  framing: "02-framing",
+  gate: "04-gate",
+  evidence: "06-evidence",
+  cores: "07-cores",
+  voice: "05-voice",
+  counter: "08-counter",
+  audit: "09-audit",
+};
+for (const m of marks) {
+  const want = at(expected[m.id]);
+  const got = m.atMs / 1000;
+  const drift = got - want;
+  const flag = drift > 0.6 ? "  遅れ" : "";
+  console.log(
+    `  ${m.id.padEnd(10)} 到達 ${got.toFixed(1)}s / 予定 ${want.toFixed(1)}s / 差 ${drift >= 0 ? "+" : ""}${drift.toFixed(1)}s${flag}`,
+  );
+}
 
 await context.close();
 await browser.close();
