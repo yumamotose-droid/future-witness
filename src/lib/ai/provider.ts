@@ -50,6 +50,7 @@ export class ProviderError extends Error {
     readonly code:
       | "no_key"
       | "rate_limited"
+      | "overloaded"
       | "upstream"
       | "timeout"
       | "blocked"

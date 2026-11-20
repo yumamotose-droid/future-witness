@@ -36,6 +36,7 @@ import { wrapUserInput } from "@/lib/security/sanitize";
 import { sanitizeClaims, sanitizeStatementText } from "./normalize";
 import {
   BUDGET,
+  budgetStop,
   estimateTokens,
   recordSpend,
   remainingTokens,
@@ -99,6 +100,16 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
       } catch (error) {
         if (error instanceof ProviderError && !error.retryable) throw error;
         lastError = error instanceof Error ? error.message : String(error);
+        // Wait before trying a busy or rate-limited model again. Immediate
+        // retries against congestion fail again and spend the run's clock.
+        const transient =
+          error instanceof ProviderError &&
+          (error.code === "overloaded" || error.code === "rate_limited");
+        if (transient && attempt < 2) {
+          const waitMs = 1_500 * 2 ** attempt;
+          if (budgetStop(ctx.ledger, Date.now() + waitMs)) throw error;
+          await new Promise((resolve) => setTimeout(resolve, waitMs));
+        }
       }
     }
     throw new ProviderError(

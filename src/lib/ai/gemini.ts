@@ -36,6 +36,11 @@ function mapError(error: unknown): ProviderError {
   if (status === 429 || /quota|rate.?limit|RESOURCE_EXHAUSTED/i.test(message)) {
     return new ProviderError(message, "rate_limited", true);
   }
+  // 503 UNAVAILABLE is the model being busy, not the request being wrong.
+  // It clears on its own, so it is worth waiting for rather than failing over.
+  if (status === 503 || /UNAVAILABLE|high demand|overloaded/i.test(message)) {
+    return new ProviderError(message, "overloaded", true);
+  }
   if (/abort|timeout|deadline/i.test(message)) {
     return new ProviderError(message, "timeout", true);
   }
