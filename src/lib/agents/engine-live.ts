@@ -43,10 +43,40 @@ import {
 } from "@/lib/security/budget";
 import { ProviderError, type AIProvider } from "@/lib/ai/provider";
 
+/**
+ * Strip the constraints Gemini's constrained decoding cannot compile.
+ *
+ * Sending the full schema for the scenarios step was rejected outright:
+ * "The specified schema produces a constraint that has too many states for
+ * serving." The length and range bounds on dozens of text fields blow up the
+ * state machine. Removing them leaves the structure — objects, required
+ * fields, enums, types — which is what the model needs to produce the right
+ * shape, and the bounds are still enforced here by the full Zod schema after
+ * the response arrives. Nothing is validated less; it is validated later.
+ */
+function leanJsonSchema(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(leanJsonSchema);
+  if (node && typeof node === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+      if (
+        key === "minLength" || key === "maxLength" || key === "pattern" ||
+        key === "minimum" || key === "maximum" ||
+        key === "minItems" || key === "maxItems"
+      ) continue;
+      out[key] = leanJsonSchema(value);
+    }
+    return out;
+  }
+  return node;
+}
+
 /** JSON Schema generation is best-effort; the prompt also states the shape. */
 function toJsonSchema(schema: z.ZodType): unknown | undefined {
   try {
-    return z.toJSONSchema(schema, { io: "output", target: "draft-7" });
+    return leanJsonSchema(
+      z.toJSONSchema(schema, { io: "output", target: "draft-7" }),
+    );
   } catch {
     return undefined;
   }
@@ -80,8 +110,15 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
     // malformed response. Three 503s in a row used to surface as
     // "invalid_output", which sends anyone debugging it to the schema.
     let lastProviderError: ProviderError | undefined;
+    // Dropping the schema used to be the last resort, on the theory that the
+    // endpoint might reject it. Measured, the opposite is true: with the
+    // schema the model returns the object asked for, and without it the same
+    // prompt reliably returns an array. So a transient failure on the first
+    // two attempts turned into a certain failure on the third. The schema is
+    // now kept unless the provider itself says the schema is the problem.
+    let schemaRejected = false;
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const useSchema = attempt < 2 ? jsonSchema : undefined;
+      const useSchema = schemaRejected ? undefined : jsonSchema;
       const body = lastError
         ? `${prompt}\n\n# Your previous output was rejected\n${lastError}\nReturn corrected JSON only.`
         : prompt;
@@ -105,6 +142,9 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
         if (error instanceof ProviderError && !error.retryable) throw error;
         if (error instanceof ProviderError) lastProviderError = error;
         lastError = error instanceof Error ? error.message : String(error);
+        if (/response_?json_?schema|responseSchema|INVALID_ARGUMENT/i.test(lastError)) {
+          schemaRejected = true;
+        }
         // Wait before trying a busy or rate-limited model again. Immediate
         // retries against congestion fail again and spend the run's clock.
         const transient =
@@ -163,7 +203,11 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
 
   return {
     mode: "live",
-    model: provider.model,
+    // A getter: the provider may have moved to another model mid-run, and the
+    // audit must name the one that answered.
+    get model() {
+      return provider.model;
+    },
 
     async framing(ctx): Promise<Framing> {
       const data = await structured(
@@ -227,7 +271,10 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
         scenariosSchema,
         CHRONOS_SCENARIOS_SYSTEM,
         base(ctx) + framingBlock(ctx) + optionsBlock(ctx),
-        { temperature: 0.55, maxOutputTokens: 2_200 },
+        // Measured at ~2,570 output tokens for three scenarios in two
+        // languages. The old 2,200 truncated the response before it could
+        // be parsed.
+        { temperature: 0.55, maxOutputTokens: 4_200 },
       );
       const optionIds = new Set((ctx.options ?? []).map((o) => o.id));
       return data.scenarios.map((s, index) => ({

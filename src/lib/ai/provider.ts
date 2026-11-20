@@ -37,6 +37,11 @@ export interface JsonResult {
 
 export interface AIProvider {
   readonly id: string;
+  /**
+   * The model that answered. Not readonly: when the preferred model is busy
+   * the adapter moves to the next one, and the audit has to name the model
+   * that actually produced the text rather than the one we asked for first.
+   */
   readonly model: string;
   /** True when this provider talks to a real model over the network. */
   readonly live: boolean;

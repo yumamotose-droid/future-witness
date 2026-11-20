@@ -7,10 +7,16 @@
  */
 
 export const BUDGET = {
-  /** Hard cap for one deliberation across all agent calls. */
-  maxOutputTokensPerRun: 9_000,
+  /**
+   * Hard cap for one deliberation across all agent calls.
+   *
+   * Measured against a live model: scenarios alone is ~2,600 output tokens,
+   * and the whole pipeline lands near 9,000 — so the old 9,000 ceiling was
+   * cutting off the last steps of a run that was otherwise fine.
+   */
+  maxOutputTokensPerRun: 14_000,
   /** Per-call cap handed to the provider. */
-  maxOutputTokensPerCall: 2_200,
+  maxOutputTokensPerCall: 4_200,
   /** Wall-clock ceiling for one run. */
   maxRunMs: 110_000,
   /** Process-lifetime ceiling, a crude circuit breaker for a runaway demo. */

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T16:21:52.461Z",
+  "at": "2026-11-20T16:42:51.073Z",
   "live": true,
   "realtime": false,
   "reports": [
@@ -9,9 +9,9 @@
       "question": "経済発展のために森林を切り開き、大型商業施設を建設するべきか？",
       "mode": "live",
       "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 20518,
-      "outputChars": 3100,
-      "estTokens": 2910,
+      "elapsedMs": 44900,
+      "outputChars": 3049,
+      "estTokens": 2916,
       "checks": [
         {
           "name": "完走した",
@@ -31,7 +31,7 @@
         {
           "name": "投票できない当事者を挙げた",
           "pass": true,
-          "detail": "将来世代 / 地域の生態系・非人間生命"
+          "detail": "将来世代 / 森林生態系および非人間生命"
         },
         {
           "name": "不正な出典が1件残らず削除・格下げされた",
@@ -51,7 +51,7 @@
         {
           "name": "仮想シナリオが事実と分離されている",
           "pass": true,
-          "detail": "verified 7 / hypothetical 12"
+          "detail": "verified 8 / hypothetical 13"
         },
         {
           "name": "シナリオが分岐している（50%以上）",
@@ -79,15 +79,16 @@
           "detail": "選択肢への推奨表現を検査"
         }
       ],
+      "notices": [],
       "audit": {
-        "claimsTotal": 31,
+        "claimsTotal": 32,
         "byKind": {
-          "verified": 7,
-          "inference": 7,
-          "hypothetical": 12,
+          "verified": 8,
+          "inference": 6,
+          "hypothetical": 13,
           "unknown": 5
         },
-        "citationsChecked": 23,
+        "citationsChecked": 26,
         "citationsRejected": 0,
         "rejectedIds": [],
         "rejectedMalformed": [],
@@ -99,13 +100,11 @@
           "future-design-saijo",
           "stanford-pacs-ai-voice",
           "jp-ghg-inventory-lulucf",
-          "ipbes-global-assessment",
-          "jp-forest-white-paper",
-          "mit-future-you"
+          "jp-forest-sink-target"
         ],
-        "mode": "scripted",
-        "model": "scripted:forest-v1 (hand-written, no model call) (fallback)",
-        "elapsedMs": 20518
+        "mode": "live",
+        "model": "gemini-3.1-flash-lite",
+        "elapsedMs": 44900
       }
     }
   ]
