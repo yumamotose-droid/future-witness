@@ -65,7 +65,10 @@ In a period where the argument is whether to trust AI output, this is a piece of
 
 Dialogue with future generations is not new — MIT Media Lab's Future You and
 Japan's Future Design practice are close prior work, and this submission says
-so. **What is new is mechanism, not concept.**
+so. Typed arguments, multi-persona debate and a standing adversary all have
+prior art too (OmouAI, KITA AI and others). The research for this submission
+**retired one of the originality claims it started with**
+(see `COMPETITOR_ANALYSIS.md` §4). **What remains is mechanism.**
 
 Citation existence checking is surfaced *in the product*: ids that do not
 resolve are removed, the statement is demoted, and **the removal count is shown
@@ -129,7 +132,10 @@ same structure.**
 1. **Citation existence checking, surfaced.** Removal and demotion counts are
    reported every run.
 2. **Per-sentence epistemic typing**, validated by schema. Output that fails
-   validation never renders.
+   validation never renders. **This one is not original**: OmouAI
+   (arXiv 2609.31078) types arguments as empirical / predictive / normative.
+   The axis differs — ours turns on whether a citation resolves — but typing
+   arguments is prior art and is not claimed as new.
 3. **The adversary attacks our own narration.**
 4. **Before-and-after measurement**, gated so the position is recorded before
    any AI output is seen.
