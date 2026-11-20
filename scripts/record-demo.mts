@@ -34,6 +34,16 @@ const started = Date.now();
  */
 const STEP_TIMEOUT_MS = 115_000;
 
+/**
+ * Anchors that survive a live run.
+ *
+ * Section titles come from the model, so the scripted engine's wording is only
+ * ever on screen during a replay. The agents' role lines are UI copy and are
+ * the same either way, which is what a recording has to key on.
+ */
+const ROLE_EVIDENCE = "確認できることだけを述べる";
+const ROLE_COUNTER = "すべてに反証する";
+
 /** When each section actually appeared, to report drift from the narration. */
 const marks: { id: string; atMs: number }[] = [];
 const mark = (id: string) => marks.push({ id, atMs: Date.now() - started });
@@ -115,10 +125,10 @@ await until(at("04-gate") + 6.0);
 await page.getByRole("button", { name: "立場を記録する" }).click();
 
 /* 05 — evidence with its limits */
-await page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" })
+await page.getByText(ROLE_EVIDENCE).first()
   .waitFor({ timeout: STEP_TIMEOUT_MS });
   mark("evidence");
-await glide(page, page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" }), 1300);
+await glide(page, page.getByText(ROLE_EVIDENCE).first(), 1300);
 await until(at("07-cores"));
 
 /* 06 — the core samples */
@@ -136,10 +146,10 @@ await glide(page, page.getByText("MIRAI").first(), 900);
 await until(at("08-counter"));
 
 /* 08 — the objection, including to ourselves */
-await page.getByRole("heading", { name: "ここまでの全体に対する反証" })
+await page.getByText(ROLE_COUNTER).first()
   .waitFor({ timeout: STEP_TIMEOUT_MS });
   mark("counter");
-await glide(page, page.getByRole("heading", { name: "ここまでの全体に対する反証" }), 1300);
+await glide(page, page.getByText(ROLE_COUNTER).first(), 1300);
 await until(at("08-counter") + 5.0);
 await page.mouse.wheel(0, 300);
 await until(at("09-audit"));
