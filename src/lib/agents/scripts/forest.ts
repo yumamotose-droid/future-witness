@@ -569,11 +569,21 @@ export const FOREST_VOICES_EN: Record<string, string> = {
   C: "In the end they built only the lower half. The woodland above is still there; you can walk into it from behind the school. I think this is the only place where you hear birds and lorries at the same time in the morning. The record of the year they stopped phase two is bound and kept at the community hall — who measured, and who called a halt. That it still exists was probably the thing that mattered most. The fund is still being argued over. The promises have mostly been kept. Not all of them.",
 };
 
+/** The objection to our own staging, kept as its own field (see Statement). */
+export const FOREST_SELF_CRITIQUE: Claim = {
+      kind: "inference",
+      text: "このシステム自体への反証。上の三つの2050年の語りは、失われたものを感覚的な細部（匂い、霧、鳥の声）で描き、得られたものを抽象語（雇用、税収、便利）で描いている。この描写の非対称性は、根拠によらない保全側への誘導として機能する。読者はこの配分そのものを疑うべきである。",
+      textEn:
+        "An objection to this system itself. All three 2050 narratives render what was lost in sensory detail — a smell, fog, birdsong — and what was gained in abstractions: jobs, tax revenue, convenience. That asymmetry works as unearned persuasion toward conservation. The reader should distrust this distribution.",
+      sourceIds: [],
+    };
+
 export const FOREST_COUNTER: Statement = {
   id: "script-forest-counter",
   agent: "COUNTER",
   titleJa: "ここまでの全体に対する反証",
   titleEn: "Objections to everything above",
+  selfCritique: FOREST_SELF_CRITIQUE,
   claims: [
     {
       kind: "inference",
@@ -602,13 +612,6 @@ export const FOREST_COUNTER: Statement = {
       textEn:
         "The monetary valuations are national replacement-cost estimates resting on a counterfactual of no forest at all, and covering only some functions. Using ¥28 trillion as grounds to reject one parcel's development borrows the figure beyond what the report asserts.",
       sourceIds: ["jp-forest-multifunction#surface-erosion"],
-    },
-    {
-      kind: "inference",
-      text: "このシステム自体への反証。上の三つの2050年の語りは、失われたものを感覚的な細部（匂い、霧、鳥の声）で描き、得られたものを抽象語（雇用、税収、便利）で描いている。この描写の非対称性は、根拠によらない保全側への誘導として機能する。読者はこの配分そのものを疑うべきである。",
-      textEn:
-        "An objection to this system itself. All three 2050 narratives render what was lost in sensory detail — a smell, fog, birdsong — and what was gained in abstractions: jobs, tax revenue, convenience. That asymmetry works as unearned persuasion toward conservation. The reader should distrust this distribution.",
-      sourceIds: [],
     },
     {
       kind: "inference",

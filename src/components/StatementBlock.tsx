@@ -30,6 +30,21 @@ export function StatementBlock({
         lang={lang}
         citationIndex={citationIndex}
       />
+
+      {statement.selfCritique ? (
+        <div className="mt-10 border-l-2 border-[var(--gold)] pl-5 sm:pl-6">
+          <h4 className="t-mono text-[var(--gold)]">
+            {lang === "ja"
+              ? "このシステム自身への反証"
+              : "An objection to this system itself"}
+          </h4>
+          <ClaimList
+            claims={[statement.selfCritique]}
+            lang={lang}
+            citationIndex={citationIndex}
+          />
+        </div>
+      ) : null}
     </section>
   );
 }

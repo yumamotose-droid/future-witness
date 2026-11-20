@@ -1,9 +1,11 @@
 /**
  * The 90-second demo, as data.
  *
- * The order follows what the screen actually does. The testimony streams the
- * moment the stance gate opens, so the camera goes there next rather than
- * pretending to catch it later — that was the flaw in the first storyboard.
+ * The order follows what the screen actually does in a LIVE run, where the
+ * steps arrive in pipeline order: the evidence and the scenarios land before
+ * the 2050 testimony, which is generated last. Filming the testimony earlier
+ * would send the camera to a section that does not exist yet. (In scripted
+ * mode everything is ready at once, so this order is correct there too.)
  *
  * `seconds` is the on-screen duration. `narration` is read by the macOS
  * Japanese voice at `rate`, tuned per segment so the speech fits inside the
@@ -73,19 +75,6 @@ export const SEGMENTS: Segment[] = [
     ],
   },
   {
-    id: "05-voice",
-    seconds: 11,
-    leadInMs: 1400,
-    rate: 170,
-    narration:
-      "語るのは、その未来に暮らす一人です。予測ではなく、条件付きの仮の話。それを隠さずラベルで言います。",
-    subtitle: [
-      "語るのは、その未来に暮らす一人。",
-      "予測ではなく、条件付きの仮の話。",
-      "それを隠さず、ラベルで言う。",
-    ],
-  },
-  {
     id: "06-evidence",
     seconds: 9,
     leadInMs: 400,
@@ -107,6 +96,19 @@ export const SEGMENTS: Segment[] = [
     subtitle: [
       "選択肢ごとに、2030年・2040年・2050年を積み上げる。",
       "横に読めば、どこで分かれるかが見える。",
+    ],
+  },
+  {
+    id: "05-voice",
+    seconds: 11,
+    leadInMs: 1400,
+    rate: 170,
+    narration:
+      "語るのは、その未来に暮らす一人です。予測ではなく、条件付きの仮の話。それを隠さずラベルで言います。",
+    subtitle: [
+      "語るのは、その未来に暮らす一人。",
+      "予測ではなく、条件付きの仮の話。",
+      "それを隠さず、ラベルで言う。",
     ],
   },
   {

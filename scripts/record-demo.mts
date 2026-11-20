@@ -83,7 +83,7 @@ await until(at("02-framing") - 0.6);
 
 /* 02 — the question and its premises */
 await page.goto(`${BASE}/deliberate?demo=1`, { waitUntil: "domcontentloaded" });
-await page.getByRole("heading", { name: "この問いが置いている前提" }).waitFor({ timeout: 30_000 });
+await page.getByRole("heading", { name: "この問いが置いている前提" }).waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "この問いが置いている前提" }));
 await until(at("03-stakeholders"));
 
@@ -92,34 +92,41 @@ await glide(page, page.getByRole("heading", { name: "影響を受ける人と、
 await until(at("04-gate"));
 
 /* 04 — record your position before seeing any output */
+await page.getByRole("heading", { name: "はじめに、いまのあなたの立場" }).waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "はじめに、いまのあなたの立場" }), 1200);
 await until(at("04-gate") + 3.6);
 await page.getByRole("radio").first().check();
 await until(at("04-gate") + 6.0);
 await page.getByRole("button", { name: "立場を記録する" }).click();
 
-/* 05 — the testimony, caught while it is still being written */
-await page.getByText("MIRAI").first().waitFor({ timeout: 20_000 });
-await glide(page, page.getByText("MIRAI").first(), 900);
-await until(at("06-evidence"));
-
-/* 06 — evidence with its limits */
+/* 05 — evidence with its limits */
+await page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" })
+  .waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "確認できる根拠と、その適用範囲" }), 1300);
 await until(at("07-cores"));
 
-/* 07 — the core samples */
+/* 06 — the core samples */
+await page.getByRole("heading", { name: "未来のコア標本" }).waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "未来のコア標本" }), 1300);
 await until(at("07-cores") + 4.5);
 await page.mouse.wheel(0, 260);
+await until(at("05-voice"));
+
+/* 07 — the testimony, caught while it is still being written */
+await page.getByText("MIRAI").first().waitFor({ timeout: 40_000 });
+await glide(page, page.getByText("MIRAI").first(), 900);
 await until(at("08-counter"));
 
 /* 08 — the objection, including to ourselves */
+await page.getByRole("heading", { name: "ここまでの全体に対する反証" })
+  .waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "ここまでの全体に対する反証" }), 1300);
 await until(at("08-counter") + 5.0);
 await page.mouse.wheel(0, 300);
 await until(at("09-audit"));
 
 /* 09 — the verification record */
+await page.getByRole("heading", { name: "検証記録" }).waitFor({ timeout: 40_000 });
 await glide(page, page.getByRole("heading", { name: "検証記録" }), 1300);
 await until(at("10-close"));
 

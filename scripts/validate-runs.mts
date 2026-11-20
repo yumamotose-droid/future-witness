@@ -102,10 +102,6 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
   const counter = statements.find(
     (s) => s.type === "statement" && s.data.agent === "COUNTER",
   );
-  const counterText =
-    counter?.type === "statement"
-      ? counter.data.claims.map((c) => c.text).join("")
-      : "";
   const text = collectText(events);
 
   const checks: Check[] = [
@@ -147,8 +143,18 @@ async function runOne(q: (typeof QUESTIONS)[number]): Promise<RunReport> {
         (s) => JSON.stringify(s.strata.map((x) => x.year)) === "[2030,2040,2050]"),
       detail: `${scen.length} シナリオ` },
     { name: "反証がこのシステム自身を攻撃している",
-      pass: /このシステム|代弁|演出|非対称/.test(counterText),
-      detail: counterText ? "該当あり" : "COUNTER なし" },
+      // Structural now: the schema requires the field, so this checks the
+      // guarantee rather than hoping a keyword turns up in free prose.
+      pass: Boolean(
+        counter?.type === "statement" && counter.data.selfCritique?.text,
+      ),
+      detail:
+        counter?.type !== "statement"
+          ? "COUNTER が出力されなかった"
+          : counter.data.selfCritique?.text
+            ? `${counter.data.selfCritique.text.slice(0, 34)}…`
+            : "selfCritique が欠けている",
+    },
     { name: "断定的な確率・金額を生成していない",
       // The corpus's own figures are allowed; invented precision is not.
       pass: !/\b\d{1,3}(\.\d+)?%の確率|必ず\d|確実に\d/.test(text),

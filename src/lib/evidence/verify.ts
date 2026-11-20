@@ -147,6 +147,9 @@ export function verifyStatements(
     claims: statement.claims.map((claim) =>
       verifyClaim(claim, statement.id, m),
     ),
+    ...(statement.selfCritique
+      ? { selfCritique: verifyClaim(statement.selfCritique, statement.id, m) }
+      : {}),
   }));
 
   // Indicator citations are verified with the same rule.

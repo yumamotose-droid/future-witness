@@ -405,6 +405,7 @@ export function createLiveEngine(provider: AIProvider): DeliberationEngine {
         titleJa: sanitizeStatementText(data.titleJa, 80),
         titleEn: sanitizeStatementText(data.titleEn, 120),
         claims: sanitizeClaims(data.claims),
+        selfCritique: sanitizeClaims([data.selfCritique])[0],
       };
     },
 

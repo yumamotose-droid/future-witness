@@ -50,6 +50,13 @@ function renderStatement(statement: Statement, lang: Lang): string {
   const lines = statement.claims.map(
     (c) => `  - ${kindTag(c, lang)} ${claimText(c, lang)}${citations(c)}`,
   );
+  if (statement.selfCritique) {
+    lines.push(
+      "",
+      `  **${lang === "ja" ? "このシステム自身への反証" : "An objection to this system itself"}**`,
+      `  - ${kindTag(statement.selfCritique, lang)} ${claimText(statement.selfCritique, lang)}${citations(statement.selfCritique)}`,
+    );
+  }
   return [`### ${statement.agent} — ${title}`, ...lines].join("\n");
 }
 

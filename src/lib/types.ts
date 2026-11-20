@@ -95,6 +95,16 @@ export interface Claim {
 export interface Statement {
   id: string;
   agent: AgentId;
+  /**
+   * COUNTER's objection to this system's own staging.
+   *
+   * It was a prompt instruction and a live run showed the model simply not
+   * following it, which left the project's most distinctive claim depending
+   * on the model's mood. It is a required field of the schema now, so a
+   * COUNTER statement that lacks one does not validate, and the interface
+   * gives it its own heading rather than burying it in the list.
+   */
+  selfCritique?: Claim;
   /** Present when the statement is bound to one future scenario. */
   scenarioId?: string;
   titleJa: string;

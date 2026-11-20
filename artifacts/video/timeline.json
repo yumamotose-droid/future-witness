@@ -30,25 +30,25 @@
       "speechSec": 7.437279
     },
     {
-      "id": "05-voice",
-      "startSec": 34,
-      "seconds": 11,
-      "rate": 170,
-      "speechSec": 8.807211
-    },
-    {
       "id": "06-evidence",
-      "startSec": 45,
+      "startSec": 34,
       "seconds": 9,
       "rate": 191,
       "speechSec": 8.266395
     },
     {
       "id": "07-cores",
-      "startSec": 54,
+      "startSec": 43,
       "seconds": 9,
       "rate": 182,
       "speechSec": 8.193152
+    },
+    {
+      "id": "05-voice",
+      "startSec": 52,
+      "seconds": 11,
+      "rate": 170,
+      "speechSec": 8.807211
     },
     {
       "id": "08-counter",

@@ -120,6 +120,8 @@ export const counterSchema = z.object({
   titleJa: z.string().min(1).max(80),
   titleEn: z.string().min(1).max(120),
   claims: z.array(claimSchema).min(3).max(10),
+  /** Required: the objection to this system's own presentation. */
+  selfCritique: claimSchema,
 });
 
 export const uncertaintySchema = z.object({

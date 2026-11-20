@@ -481,6 +481,13 @@ function derivedCounter(ctx: RunContext): Statement {
     agent: "COUNTER",
     titleJa: "ここまでの全体に対する反証",
     titleEn: "Objections to everything above",
+    selfCritique: {
+        kind: "inference",
+        text: "このシステム自体への反証。2050年の語りは感覚的な細部で書かれ、便益は抽象語で書かれている。この非対称な描写は、根拠によらず現状維持側へ読者を誘導しうる。読者はこの配分を疑うべきである。",
+        textEn:
+          "An objection to this system. The 2050 narrative is written in sensory detail while the benefits are written in abstractions. That asymmetry can push the reader toward the status quo without evidence. Distrust the distribution.",
+        sourceIds: [],
+      },
     claims: [
       {
         kind: "inference",
@@ -501,13 +508,6 @@ function derivedCounter(ctx: RunContext): Statement {
         text: "「実行しない」が無償であるという前提も疑うべきである。現状維持には費用と担い手が必要で、その負担も将来に先送りされる。",
         textEn:
           "The assumption that not acting is free should also be doubted. Holding the status quo costs money and labour, and that burden is deferred into the future too.",
-        sourceIds: [],
-      },
-      {
-        kind: "inference",
-        text: "このシステム自体への反証。2050年の語りは感覚的な細部で書かれ、便益は抽象語で書かれている。この非対称な描写は、根拠によらず現状維持側へ読者を誘導しうる。読者はこの配分を疑うべきである。",
-        textEn:
-          "An objection to this system. The 2050 narrative is written in sensory detail while the benefits are written in abstractions. That asymmetry can push the reader toward the status quo without evidence. Distrust the distribution.",
         sourceIds: [],
       },
       {
