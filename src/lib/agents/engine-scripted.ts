@@ -23,6 +23,7 @@ import {
   FOREST_TOPIC_KEYS,
   FOREST_UNCERTAINTY,
   FOREST_VOICES,
+  FOREST_VOICES_EN,
   FOREST_WITNESSES,
 } from "./scripts/forest";
 
@@ -320,16 +321,22 @@ function derivedFraming(ctx: RunContext): Framing {
       {
         kind: "inference",
         text: "この問いは、判断の効果が測定可能な期間内に現れることを前提にしている。効果が数十年後に現れる場合、現在の判断者はその結果を見ない。",
+        textEn:
+          "The question assumes the effects of the decision appear within a measurable period. Where they appear decades later, the people deciding today never see the result.",
         sourceIds: [],
       },
       {
         kind: "verified",
         text: "市場では将来世代が価格を通じて意思を示せず、民主制では投票できないため、将来世代の利害は構造的に意思決定から外れる。",
+        textEn:
+          "Future generations cannot express preferences through prices in markets and cannot vote in democracies, so their interests are structurally excluded from decisions.",
         sourceIds: ["future-design-saijo#absence-of-future-generations"],
       },
       {
         kind: "unknown",
         text: "この問いには対象の地域、規模、時期が含まれていない。地域データなしに結論を出すことは、どの方向であっても根拠を欠く。",
+        textEn:
+          "The question names no locality, no scale and no timing. Reaching a conclusion without local data is unfounded in either direction.",
         sourceIds: [],
       },
     ],
@@ -399,11 +406,13 @@ function derivedEvidence(ctx: RunContext): Statement {
       claims.push({
         kind: "verified",
         text: finding.ja,
+        textEn: finding.en,
         sourceIds: [`${hit.source.id}#${finding.id}`],
       });
       claims.push({
         kind: "verified",
         text: `この数値の限界: ${finding.caveatJa}`,
+        textEn: `Limitation: ${finding.caveatEn}`,
         sourceIds: [`${hit.source.id}#${finding.id}`],
       });
     }
@@ -411,11 +420,15 @@ function derivedEvidence(ctx: RunContext): Statement {
   claims.push({
     kind: "inference",
     text: "上の資料はいずれも全国規模または地球規模の統計であり、この問いが指す具体的な場所・規模・時期には直接適用できない。適用範囲の外で使うと、正しい数値から誤った結論が出る。",
+    textEn:
+      "Every document above is a national or global statistic and does not apply directly to the place, scale and timing this question points at. Used outside its scope, a correct figure produces a wrong conclusion.",
     sourceIds: [],
   });
   claims.push({
     kind: "unknown",
     text: "この問いに固有の地域データ（対象の位置、規模、関係者の数、代替案の費用）はこのコーパスに含まれていない。これらなしでは賛否の判定はできない。",
+    textEn:
+      "The local data specific to this question — where, how large, how many people affected, what the alternatives cost — is not in this corpus. Without it, no verdict can be reached.",
     sourceIds: [],
   });
   return {
@@ -462,31 +475,43 @@ function derivedCounter(ctx: RunContext): Statement {
       {
         kind: "inference",
         text: "三つの選択肢はいずれも、判断に必要な地域データが存在しないまま並べられている。選択肢が整って見えること自体が、判断可能であるという誤った印象を与える。",
+        textEn:
+          "All three options are laid out without the local data a decision requires. That they look orderly is itself misleading: it suggests the question is decidable when it is not.",
         sourceIds: [],
       },
       {
         kind: "inference",
         text: "選択肢Cの「条件付き」は、監視の主体・測定方法・違反時の執行機関が決まらなければ、実質的にAと同じ結果になる。中間案は、制度設計を後回しにする口実になりやすい。",
+        textEn:
+          "Option C's “conditions” produce the same outcome as A unless the monitor, the measurement method and the enforcement body are named. A middle option is an easy excuse for deferring institutional design.",
         sourceIds: [],
       },
       {
         kind: "inference",
         text: "「実行しない」が無償であるという前提も疑うべきである。現状維持には費用と担い手が必要で、その負担も将来に先送りされる。",
+        textEn:
+          "The assumption that not acting is free should also be doubted. Holding the status quo costs money and labour, and that burden is deferred into the future too.",
         sourceIds: [],
       },
       {
         kind: "inference",
         text: "このシステム自体への反証。2050年の語りは感覚的な細部で書かれ、便益は抽象語で書かれている。この非対称な描写は、根拠によらず現状維持側へ読者を誘導しうる。読者はこの配分を疑うべきである。",
+        textEn:
+          "An objection to this system. The 2050 narrative is written in sensory detail while the benefits are written in abstractions. That asymmetry can push the reader toward the status quo without evidence. Distrust the distribution.",
         sourceIds: [],
       },
       {
         kind: "verified",
         text: "きわめて包摂的に設計された熟議プロセスであっても将来世代と自然は除外されうると指摘されている。AIによる代弁が適切かという規範的論点は未解決として扱われており、本システムもその例外ではない。",
+        textEn:
+          "Even highly inclusive deliberative processes may exclude future generations and nature. Whether AI is an appropriate proxy is treated as an open normative question, and this system is no exception to it.",
         sourceIds: ["stanford-pacs-ai-voice#excluded-from-deliberation"],
       },
       {
         kind: "inference",
         text: "この実行は脚本エンジンによるもので、生成モデルは接続されていない。したがって上の反証は、この問いに対して個別に考えられたものではなく、構造から用意された定型文である。個別の論点は見落とされている。",
+        textEn:
+          "This run came from the scripted engine; no generative model was connected. These objections were therefore not reasoned about this question in particular — they are prepared from its structure, and the specific issues have been missed.",
         sourceIds: [],
       },
     ],
@@ -503,26 +528,36 @@ function derivedUncertainty(ctx: RunContext): Statement {
       {
         kind: "unknown",
         text: "この問いが指す対象の規模と範囲が不明である。解決には、提案者が持つ計画書と対象範囲の図面の開示が必要になる。",
+        textEn:
+          "The scale and extent of what this question points at are unknown. Resolving it needs the proposer to disclose the plan and a map of the area affected.",
         sourceIds: [],
       },
       {
         kind: "unknown",
         text: "影響を受ける人数とその年齢構成が不明である。解決には、地域別の人口推計と、影響範囲の重ね合わせが必要になる。",
+        textEn:
+          "How many people are affected, and of what ages, is unknown. Resolving it needs regional population projections overlaid on the area of effect.",
         sourceIds: [],
       },
       {
         kind: "unknown",
         text: "やり直す場合の費用と、それを負担する主体が不明である。解決には、撤退・復旧費用の見積と、その担保方法の明示が必要になる。",
+        textEn:
+          "The cost of undoing this, and who would bear it, are unknown. Resolving it needs an estimate of exit and restoration costs and a statement of how they are secured.",
         sourceIds: [],
       },
       {
         kind: "inference",
         text: "このコーパスは全国・地球規模の資料で構成されており、構造的に個別の判断には答えられない。この限界は資料を増やしても、対象地域のデータが入るまで解消しない。",
+        textEn:
+          "This corpus is built from national and global documents and structurally cannot answer an individual case. More documents will not fix that until local data is present.",
         sourceIds: [],
       },
       {
         kind: "unknown",
         text: "本システムが意思決定の質を実際に改善するかは未検証である。立場の事前事後の変化は記録されるが、変化が改善を意味する保証はない。",
+        textEn:
+          "Whether this system actually improves decision quality is untested. It records the change in position, but a change is no guarantee of improvement.",
         sourceIds: ["mit-future-you#anxiety-reduction"],
       },
     ],
@@ -575,8 +610,14 @@ export function createScriptedEngine(
       if (kind === "curated") {
         const witness =
           FOREST_WITNESSES[scenario.id] ?? FOREST_WITNESSES.A;
-        const body = FOREST_VOICES[scenario.id] ?? FOREST_VOICES.A;
-        return { witness, stream: streamString(body, { delayMs }) };
+        const primary = ctx.lang === "en" ? FOREST_VOICES_EN : FOREST_VOICES;
+        const other = ctx.lang === "en" ? FOREST_VOICES : FOREST_VOICES_EN;
+        const body = primary[scenario.id] ?? primary.A;
+        return {
+          witness,
+          stream: streamString(body, { delayMs }),
+          alternate: other[scenario.id] ?? other.A,
+        };
       }
       const leans: Lean[] = ["act", "hold", "stage"];
       const index = Math.max(

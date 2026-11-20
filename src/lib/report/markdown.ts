@@ -41,10 +41,14 @@ function citations(claim: Claim): string {
   return `\n    - 出典: ${refs}`;
 }
 
+function claimText(claim: Claim, lang: Lang): string {
+  return lang === "en" ? (claim.textEn ?? claim.text) : claim.text;
+}
+
 function renderStatement(statement: Statement, lang: Lang): string {
   const title = lang === "ja" ? statement.titleJa : statement.titleEn;
   const lines = statement.claims.map(
-    (c) => `  - ${kindTag(c, lang)} ${c.text}${citations(c)}`,
+    (c) => `  - ${kindTag(c, lang)} ${claimText(c, lang)}${citations(c)}`,
   );
   return [`### ${statement.agent} — ${title}`, ...lines].join("\n");
 }
@@ -98,7 +102,9 @@ export function buildReportMarkdown(
   out.push(L ? result.framing.coreJa : result.framing.coreEn);
   out.push("");
   for (const assumption of result.framing.assumptions) {
-    out.push(`- ${kindTag(assumption, lang)} ${assumption.text}${citations(assumption)}`);
+    out.push(
+      `- ${kindTag(assumption, lang)} ${claimText(assumption, lang)}${citations(assumption)}`,
+    );
   }
   out.push("");
   out.push(`### ${L ? "影響を受ける人と投票可能性" : "Affected parties and their vote"}`);

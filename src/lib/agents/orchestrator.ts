@@ -248,7 +248,11 @@ export async function* runDeliberation(
         // The testimony itself is one hypothetical statement.
         audit.byKind.hypothetical += 1;
         audit.claimsTotal += 1;
-        yield { type: "voice-end", scenarioId: scenario.id };
+        yield {
+          type: "voice-end",
+          scenarioId: scenario.id,
+          ...(handle.alternate ? { bodyAlt: handle.alternate } : {}),
+        };
       }
     }
 

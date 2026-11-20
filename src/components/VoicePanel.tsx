@@ -18,12 +18,15 @@ export function VoicePanel({
   voices,
   activeVoice,
   lang,
+  runLang,
   narration,
 }: {
   scenarios: Scenario[];
   voices: Voice[];
   activeVoice: string | null;
   lang: Lang;
+  /** The language the run was generated in. */
+  runLang: Lang | null;
   narration: {
     supported: boolean;
     speakingId: string | null;
@@ -62,6 +65,12 @@ export function VoicePanel({
           if (!voice) return null;
           const speaking = narration.speakingId === scenario.id;
           const streaming = activeVoice === scenario.id;
+          const needsOther = runLang !== null && runLang !== lang;
+          const body =
+            needsOther && voice.bodyAlt ? voice.bodyAlt : voice.body;
+          // A live model writes one language. Rather than machine-translating
+          // a testimony, we show it as generated and name the language.
+          const untranslated = needsOther && !voice.bodyAlt;
           return (
             <figure key={scenario.id} className="flex flex-col">
               <figcaption className="rule-b flex flex-wrap items-baseline gap-x-3 gap-y-1 pb-3">
@@ -85,8 +94,16 @@ export function VoicePanel({
                   streaming ? " caret" : ""
                 }`}
               >
-                {voice.body}
+                {body}
               </blockquote>
+
+              {untranslated ? (
+                <p className="t-mono mt-3 text-ink-faint">
+                  {lang === "en"
+                    ? "Generated in Japanese; shown as written."
+                    : "英語で生成されたため、そのまま表示しています。"}
+                </p>
+              ) : null}
 
               <p className="t-mono-plain mt-4 text-ink-faint">
                 {scenario.id} ·{" "}
@@ -100,7 +117,7 @@ export function VoicePanel({
                   onClick={() =>
                     speaking
                       ? narration.stop()
-                      : narration.speak(scenario.id, voice.body)
+                      : narration.speak(scenario.id, body)
                   }
                   disabled={streaming}
                 >

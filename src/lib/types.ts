@@ -78,7 +78,14 @@ export interface SourceRecord {
 
 export interface Claim {
   kind: EpistemicKind;
+  /** Primary text. Japanese is the product's primary language. */
   text: string;
+  /**
+   * English rendering of the same sentence. Optional because a live model may
+   * fail to produce it; the UI falls back to `text` rather than showing a gap,
+   * and never shows a machine-translated-looking placeholder.
+   */
+  textEn?: string;
   /** Finding ids (`<sourceId>#<findingId>`). Required when kind === "verified". */
   sourceIds: string[];
   /** Set by the verifier when a claim was demoted for lack of valid citations. */
@@ -166,8 +173,15 @@ export interface Witness {
 export interface Voice {
   scenarioId: string;
   witness: Witness;
-  /** Streamed narrative. Always rendered under a `hypothetical` frame. */
+  /** Streamed narrative, in the language the run was started in. */
   body: string;
+  /**
+   * The same testimony in the other language, when the engine has one written.
+   * The scripted engine does; a live model produces only the run's language, so
+   * switching afterwards falls back to `body` and the UI says which language it
+   * is in rather than pretending to translate.
+   */
+  bodyAlt?: string;
 }
 
 /** What the verification layer actually did — surfaced in the UI. */
@@ -235,7 +249,7 @@ export type StreamEvent =
   | { type: "scenarios"; data: Scenario[] }
   | { type: "voice-start"; scenarioId: string; witness: Witness }
   | { type: "voice-delta"; scenarioId: string; text: string }
-  | { type: "voice-end"; scenarioId: string }
+  | { type: "voice-end"; scenarioId: string; bodyAlt?: string }
   | { type: "audit"; data: AuditReport }
   | { type: "notice"; code: string; messageJa: string; messageEn: string }
   | { type: "error"; code: string; messageJa: string; messageEn: string }

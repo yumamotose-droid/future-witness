@@ -8,8 +8,8 @@
 ## 現在の状態: 一通り完成し、検証済み。未デプロイ。
 
 ```
-npm run verify   → PASS（型0・Lint0・単体54件・本番ビルド成功）
-npm run test:e2e → 18 passed (40.0s)
+npm run verify   → PASS（型0・Lint0・単体60件・本番ビルド成功）
+npm run test:e2e → 20 passed (35.7s)
 npm audit        → 0 vulnerabilities
 ```
 
@@ -34,7 +34,7 @@ npm audit        → 0 vulnerabilities
 | 15 | 音声機能 | 完了（入力・読み上げ、非対応時は非表示） |
 | 16 | 履歴管理 | 完了（ブラウザ内。Supabase はオプトイン） |
 | 17 | セキュリティ | 完了 → `SECURITY.md`（限界も記載） |
-| 18 | 単体・E2E テスト | 完了（54 + 18件） |
+| 18 | 単体・E2E テスト | 完了（60 + 20件） |
 | 19 | 実ブラウザでの動作確認 | 完了（Chromium / WebKit・19枚の証跡） |
 | 20 | UI/UX 改善 | 完了（モバイル横スクロール・subgrid 整列を修正） |
 | 21 | 第三者視点の批判的評価 | 完了 → `EVALUATION_REPORT.md`（10視点） |
@@ -46,6 +46,10 @@ npm audit        → 0 vulnerabilities
 
 ## 修正した実バグ（検証で発見したもの）
 
+0. **英語に切り替えても記述の本文が日本語のままだった**
+   （`Claim` が `text` しか持たなかった）。実機の目視で発見。
+   `Claim.textEn` を追加し、脚本24・派生16の記述と証言3本に英語を用意。
+   単体6件とE2E1件で固定（`tests/unit/bilingual.test.ts`）。
 1. **双方向アイソレート（U+2066–U+2069）が除去されていなかった**
    （`src/lib/security/sanitize.ts`）。不可視文字で命令を隠せる穴。単体テストが検出。
 2. **モバイル390pxで指標比較テーブルがページを43px横に引っぱっていた**

@@ -34,21 +34,29 @@ export const FOREST_FRAMING: Framing = {
     {
       kind: "inference",
       text: "「経済発展」と「森林保全」が対立するという前提が置かれている。どちらも手段であり、何のための発展かは問いの中で定義されていない。",
+      textEn:
+        "The question assumes that “economic development” and “forest conservation” are opposed. Both are means, and the question never defines what the development is for.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "商業施設が建設されれば経済が発展するという前提が置かれている。その施設の需要が20年後、40年後も続くかどうかは問いに含まれていない。",
+      textEn:
+        "The question assumes that building a commercial complex develops the economy. Whether demand for that complex still exists in twenty or forty years is not part of the question.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "転用は法的には可逆だが、同等の林相の回復には世代をまたぐ時間がかかる。日本の人工林では林齢51年以上が全人工林面積の64%を占めるまでに半世紀以上が経過している。",
+      textEn:
+        "Conversion is legally reversible, but restoring comparable forest structure takes more than one generation. In Japan it has taken over half a century for stands aged 51 years or more to reach 64% of all planted forest area.",
       sourceIds: ["jp-forest-white-paper#age-class-shift"],
     },
     {
       kind: "unknown",
       text: "問いには対象地域、森林の種類と林齢、斜面の条件、施設の規模が含まれていない。これらが決まらないまま賛否を出すことは、どちらの方向であっても根拠を欠く。",
+      textEn:
+        "The question names no locality, no forest type or age, no slope conditions and no scale of facility. Returning a verdict before those are fixed is unfounded in either direction.",
       sourceIds: [],
     },
   ],
@@ -141,21 +149,29 @@ export const FOREST_EVIDENCE: Statement = {
     {
       kind: "verified",
       text: "2024年度の土地利用・土地利用変化・林業（LULUCF）分野の温室効果ガス純吸収量は49,421kt-CO2換算で、1990年度比35.5%減、前年度比1.9%減である。",
+      textEn:
+        "In FY2024 the land use, land-use change and forestry (LULUCF) sector was a net greenhouse gas sink of 49,421 kt-CO2eq — 35.5% below FY1990 and 1.9% below the previous year.",
       sourceIds: ["jp-ghg-inventory-lulucf#net-sink-2024"],
     },
     {
       kind: "verified",
       text: "この減少は森林の高齢化による成長量の低下が主因とされ、伐採量そのものを示す数値ではない。吸収量の減少をそのまま「伐採が進んだ結果」と読むことはできない。",
+      textEn:
+        "That decline is attributed mainly to slower growth in ageing forests; it is not a measure of logging volume. A falling sink cannot be read directly as “the result of more cutting”.",
       sourceIds: ["jp-ghg-inventory-lulucf#net-sink-2024"],
     },
     {
       kind: "verified",
       text: "2021年度時点で、林齢51年以上の人工林が全人工林面積の64%を占め、齢級構成はさらに高齢側へ移動している。",
+      textEn:
+        "As of FY2021, planted forests aged 51 years or more account for 64% of all planted forest area, and the age distribution continues to shift older.",
       sourceIds: ["jp-forest-white-paper#age-class-shift"],
     },
     {
       kind: "verified",
       text: "森林の表面侵食防止機能は年間28兆2,565億円、表層崩壊防止機能は年間8兆4,421億円と評価されている。洪水緩和は6兆4,686億円、水資源貯留は8兆7,407億円、水質浄化は14兆6,361億円である。",
+      textEn:
+        "Prevention of surface erosion is valued at ¥28.26 trillion a year and prevention of shallow landslides at ¥8.44 trillion. Flood mitigation is ¥6.47 trillion, water storage ¥8.74 trillion and water purification ¥14.64 trillion.",
       sourceIds: [
         "jp-forest-multifunction#surface-erosion",
         "jp-forest-multifunction#landslide-prevention",
@@ -165,11 +181,15 @@ export const FOREST_EVIDENCE: Statement = {
     {
       kind: "verified",
       text: "ただしこれらは代替法による全国推計であり、「森林がまったくない場合」との比較という仮定に依存し、多面的機能の一部のみを対象としている。特定の一区画の価値額としては使えない。",
+      textEn:
+        "These are national replacement-cost estimates that assume a counterfactual of no forest at all and cover only part of forest functions. They cannot be used as the value of one specific parcel.",
       sourceIds: ["jp-forest-multifunction#surface-erosion"],
     },
     {
       kind: "verified",
       text: "自然の変化をもたらす五つの直接要因のうち、世界規模での影響が最も大きいのは土地および海域利用の変化であり、陸地表面の75%が人間活動によって著しく改変されている。",
+      textEn:
+        "Among the five direct drivers of change in nature, change in land and sea use has the largest relative global impact, and 75% of the land surface has been significantly altered by human activity.",
       sourceIds: [
         "ipbes-global-assessment#land-use-top-driver",
         "ipbes-global-assessment#land-altered",
@@ -178,16 +198,22 @@ export const FOREST_EVIDENCE: Statement = {
     {
       kind: "inference",
       text: "これは世界平均の相対的な順位であり、この地域のこの開発が当地で最大の要因であることを示すものではない。地球規模の評価を一区画の是非に直結させることは、この報告書の主張を超える。",
+      textEn:
+        "That is a relative ranking of global averages; it does not establish that this development is the dominant driver here. Carrying a global assessment straight into a verdict on one parcel goes beyond what the report claims.",
       sourceIds: ["ipbes-global-assessment#land-use-top-driver"],
     },
     {
       kind: "verified",
       text: "地球温暖化対策計画では、2030年度に約3,800万t-CO2（2013年度総排出量比2.7%相当）の森林吸収量を確保する目標が掲げられている。現状の純吸収量はこの水準を上回るが、減少傾向にある。",
+      textEn:
+        "Japan's Plan for Global Warming Countermeasures targets a forest sink of roughly 38 million t-CO2 in FY2030, equivalent to 2.7% of FY2013 total emissions. The current net sink exceeds that level but is declining.",
       sourceIds: ["jp-forest-sink-target#sink-target-2030"],
     },
     {
       kind: "unknown",
       text: "対象森林の樹種・林齢・斜面勾配・取水点との位置関係、施設の需要見通し、商圏人口の推計は、このコーパスに含まれていない。この三つを欠いたまま本件の是非を判定することはできない。",
+      textEn:
+        "The species composition, stand age, slope gradient and relation to water intake points of this forest, the demand outlook for the facility, and the catchment population are not in this corpus. Without those three, the question cannot be decided.",
       sourceIds: [],
     },
   ],
@@ -535,6 +561,14 @@ export const FOREST_VOICES: Record<string, string> = {
   C: "施設は結局、下の半分だけです。上の林は残っていて、学校の裏から入れる。朝、鳥の声とトラックの音が同時に聞こえるのは、ここだけだと思います。十年前に第二期をやめた年の記録が、公民館に綴じて置いてある。誰が測って、誰が止めたかが書いてある。それが残っているのが、たぶんいちばん大事なことでした。積立金の話はいまも揉めています。約束は、守られているほうです。全部ではありません。",
 };
 
+/** The same three lives, in English. A toggle that left these in Japanese
+ *  would leave an English reader with the structure and none of the substance. */
+export const FOREST_VOICES_EN: Record<string, string> = {
+  A: "When I open the window in the morning it smells of the car park. The summer heat stays in the asphalt until night and it is hard to get the children to sleep. Shopping is seven minutes on foot and there is a bus to the hospital. It is convenient — that part is true. But everything above the third floor is empty and only the signage is new. My mother says she gathered chestnuts on this slope once; she cannot tell me where. Last year the repair bill for the retaining wall behind us landed in our building fees. Nobody at the residents' meeting could say who keeps paying it.",
+  B: "On June mornings the fog comes up out of the valley. Nothing dries, so everyone complains. Our water still comes from the stream above and it does not cloud even after a typhoon — we are proud of that. Almost everyone I went to school with has left. Shopping is twenty minutes away in the next city, twice a month in one trip. I have heard about the shortage of hands for thinning since my grandfather's time. The forest stayed. There are fewer and fewer people left who can explain what it cost to keep it.",
+  C: "In the end they built only the lower half. The woodland above is still there; you can walk into it from behind the school. I think this is the only place where you hear birds and lorries at the same time in the morning. The record of the year they stopped phase two is bound and kept at the community hall — who measured, and who called a halt. That it still exists was probably the thing that mattered most. The fund is still being argued over. The promises have mostly been kept. Not all of them.",
+};
+
 export const FOREST_COUNTER: Statement = {
   id: "script-forest-counter",
   agent: "COUNTER",
@@ -544,31 +578,43 @@ export const FOREST_COUNTER: Statement = {
     {
       kind: "inference",
       text: "三つの選択肢すべてが、商業床の需要が40年続くことを暗黙に前提にしている。人口減少局面でその前提を支える根拠は提示されていない。そして撤退後の解体費用を誰が負担するかは、A・B・Cのいずれの記述でも空欄のままである。",
+      textEn:
+        "All three options tacitly assume that demand for retail floor space lasts forty years. No evidence is offered for that assumption in a shrinking population. And who pays to demolish the building after an exit is left blank in every one of them.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "選択肢Cの「条件付き」は、監視の主体・測定方法・違反時の執行機関が決まらなければ、実質的にAと同じ結果になる。契約条項は、執行する機関がなければ文章でしかない。Cを選ぶことは、制度設計を後回しにしたまま着工を認めることと区別がつかない。",
+      textEn:
+        "Option C's “conditions” produce the same outcome as A unless the monitor, the measurement method and the enforcement body are all named. A contract clause with no body to enforce it is prose. Choosing C is indistinguishable from approving construction while deferring the institutional design.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "保全側に対する最良の反論は「保全は何もしないことではない」である。高齢化した人工林を手入れせずに残すことは、吸収量の低下と災害リスクの両方を放置しうる。林齢51年以上が人工林面積の64%を占める状況で、Bは積極的で高価な選択であり、無償の現状維持ではない。",
+      textEn:
+        "The strongest case against conservation is that conservation is not doing nothing. Leaving an ageing planted forest untended can let both the carbon sink and the disaster risk deteriorate. With stands over 51 years at 64% of planted area, B is an active and expensive choice, not a free status quo.",
       sourceIds: ["jp-forest-white-paper#age-class-shift"],
     },
     {
       kind: "verified",
       text: "多面的機能の貨幣評価額は代替法による全国推計であり、「森林がまったくない場合」との比較に依存し、機能の一部のみを対象としている。28兆円という数字を一区画の開発を否定する根拠として使うことは、この答申の主張を超えた流用である。",
+      textEn:
+        "The monetary valuations are national replacement-cost estimates resting on a counterfactual of no forest at all, and covering only some functions. Using ¥28 trillion as grounds to reject one parcel's development borrows the figure beyond what the report asserts.",
       sourceIds: ["jp-forest-multifunction#surface-erosion"],
     },
     {
       kind: "inference",
       text: "このシステム自体への反証。上の三つの2050年の語りは、失われたものを感覚的な細部（匂い、霧、鳥の声）で描き、得られたものを抽象語（雇用、税収、便利）で描いている。この描写の非対称性は、根拠によらない保全側への誘導として機能する。読者はこの配分そのものを疑うべきである。",
+      textEn:
+        "An objection to this system itself. All three 2050 narratives render what was lost in sensory detail — a smell, fog, birdsong — and what was gained in abstractions: jobs, tax revenue, convenience. That asymmetry works as unearned persuasion toward conservation. The reader should distrust this distribution.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "将来世代を代弁する行為自体への反証。2050年の人物を造形したのは現在のモデルであり、将来世代の同意は存在しない。代弁は、代弁者の価値観を将来世代の名前で正当化する装置になりうる。この装置は、森林の保全を主張するためにも、開発を主張するためにも、同じ強さで使える。",
+      textEn:
+        "An objection to speaking for future generations at all. The person in 2050 was composed by a present-day model, and no future generation consented. Advocacy can become a device for legitimising the advocate's values in a future generation's name — and the device works just as well for development as for conservation.",
       sourceIds: ["stanford-pacs-ai-voice#excluded-from-deliberation"],
     },
   ],
@@ -583,26 +629,36 @@ export const FOREST_UNCERTAINTY: Statement = {
     {
       kind: "unknown",
       text: "対象森林と取水点の位置関係が不明である。解決には自治体の水道事業者が持つ取水点データと流域図の照合が必要で、これは自治体が収集できる。",
+      textEn:
+        "The relation between this forest and the water intake points is unknown. Resolving it needs the municipal water utility's intake data checked against the catchment map, which the municipality can collect.",
       sourceIds: [],
     },
     {
       kind: "unknown",
       text: "施設の需要見通しが不明である。解決には地域別の将来人口推計と商圏人口の照合が必要で、自治体と事業者の双方が持つ情報を突き合わせる必要がある。",
+      textEn:
+        "The demand outlook for the facility is unknown. Resolving it needs regional population projections checked against the catchment population, which requires information held by both the municipality and the developer.",
       sourceIds: [],
     },
     {
       kind: "unknown",
       text: "撤退時の解体・原状回復費用の見積額と、その担保方法が不明である。解決には事業計画と開発許可条件の開示が必要で、これは許可権者が求められる。",
+      textEn:
+        "The estimated cost of demolition and restoration on exit, and how it would be secured, are unknown. Resolving it needs disclosure of the business plan and the development permit conditions, which the permitting authority can require.",
       sourceIds: [],
     },
     {
       kind: "inference",
       text: "このコーパスは全国規模と地球規模の資料で構成されており、構造的に一区画の判断には答えられない。地域データなしで賛否を出すことは、どちらの方向であっても根拠を欠く。この限界はコーパスを増やしても、地域データが入るまでは解消しない。",
+      textEn:
+        "This corpus is built from national and global documents and structurally cannot answer a question about one parcel. Issuing a verdict without local data is unfounded in either direction, and more documents will not fix it until local data is present.",
       sourceIds: ["jp-forest-multifunction#surface-erosion"],
     },
     {
       kind: "unknown",
       text: "本システムが意思決定の質を実際に改善するかは未検証である。立場の事前事後の変化は記録されるが、変化したことが「より良い決定」を意味する保証はない。検証には、本システムを使った群と使わなかった群の決定を追跡する比較が必要になる。",
+      textEn:
+        "Whether this system actually improves decision quality is untested. It records the change in position before and after, but a change is no guarantee of a better decision. Testing it would require following decisions made with and without the system.",
       sourceIds: ["mit-future-you#anxiety-reduction"],
     },
   ],

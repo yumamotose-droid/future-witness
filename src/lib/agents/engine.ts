@@ -30,6 +30,8 @@ export interface RunContext {
 export interface VoiceHandle {
   witness: Witness;
   stream: AsyncIterable<string>;
+  /** The same testimony in the other language, when one is already written. */
+  alternate?: string;
 }
 
 /**

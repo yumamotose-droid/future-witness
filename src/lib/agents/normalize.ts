@@ -9,15 +9,26 @@ export function sanitizeStatementText(input: string, max = 600): string {
 }
 
 export function sanitizeClaims(
-  claims: { kind: Claim["kind"]; text: string; sourceIds?: string[] }[],
+  claims: {
+    kind: Claim["kind"];
+    text: string;
+    textEn?: string;
+    sourceIds?: string[];
+  }[],
 ): Claim[] {
   return claims
-    .map((c) => ({
-      kind: c.kind,
-      text: sanitizeStatementText(c.text, 600),
-      sourceIds: (c.sourceIds ?? [])
-        .map(sanitizeCitationId)
-        .filter((id) => id.length > 0),
-    }))
+    .map((c) => {
+      const textEn = c.textEn
+        ? sanitizeStatementText(c.textEn, 800)
+        : undefined;
+      return {
+        kind: c.kind,
+        text: sanitizeStatementText(c.text, 600),
+        ...(textEn ? { textEn } : {}),
+        sourceIds: (c.sourceIds ?? [])
+          .map(sanitizeCitationId)
+          .filter((id) => id.length > 0),
+      };
+    })
     .filter((c) => c.text.length > 0);
 }

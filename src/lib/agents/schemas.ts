@@ -19,6 +19,9 @@ export const epistemicKindSchema = z.enum([
 export const claimSchema = z.object({
   kind: epistemicKindSchema,
   text: z.string().min(1).max(600),
+  /** The same sentence in English. Optional so one missing translation does
+   *  not invalidate an otherwise sound statement. */
+  textEn: z.string().max(800).optional(),
   sourceIds: z.array(z.string().max(120)).max(6).default([]),
 });
 

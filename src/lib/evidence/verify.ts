@@ -86,6 +86,7 @@ function verifyClaim(
   return {
     kind,
     text: claim.text,
+    ...(claim.textEn ? { textEn: claim.textEn } : {}),
     sourceIds: kind === "unknown" ? [] : kept,
     ...(downgradedFrom ? { downgradedFrom } : {}),
   };

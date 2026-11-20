@@ -100,7 +100,7 @@ what would resolve each unknown, and says who could collect it.
 ## Verified results
 
 - 0 type errors, 0 lint warnings, production build passes, 0 dependency vulnerabilities
-- 54 unit tests and 18 end-to-end tests pass (Chromium and WebKit / iPhone 13)
+- 60 unit tests and 20 end-to-end tests pass (Chromium and WebKit / iPhone 13)
 - Demo run: 36 statements (8 verified / 10 inference / 12 hypothetical / 6 unknown),
   **28 citations all resolved, 0 removed**, scenario divergence 100%, ~2.0s
 - No horizontal scroll at 390px; no console errors

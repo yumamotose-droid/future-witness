@@ -32,9 +32,9 @@ Route (app)
 ## 2. 単体テスト（Vitest）
 
 ```
-Test Files  8 passed (8)
-     Tests  54 passed (54)
-  Duration  232ms
+Test Files  9 passed (9)
+     Tests  60 passed (60)
+  Duration  329ms
 ```
 
 | ファイル | 件数 | 何を固定しているか |
@@ -46,7 +46,8 @@ Test Files  8 passed (8)
 | `retrieve.test.ts` | 5 | 森林の問いで森林資料が引けること。無関係な問いでも空にならないこと。全記述が引用可能IDつきで整形されること |
 | `ratelimit.test.ts` | 4 | バケットの枯渇と回復。経路別・アドレス別の分離 |
 | `budget.test.ts` | 5 | トークン・時間の上限で停止すること |
-| `report.test.ts` | 3 | レポートに事前事後の立場、差分、来歴8項目、検証記録、免責が含まれること |
+| `report.test.ts` | 2 | レポートに事前事後の立場、差分、来歴8項目、検証記録、免責が含まれること |
+| `bilingual.test.ts` | 6 | **全記述が英語の本文を持つこと**。英語欄に日本語文字が残っていないこと。2050年の証言が英語でも存在すること。選択肢・シナリオ・指標・コーパス・UI辞書が両言語を持つこと |
 
 **この過程で見つかって直した実バグ**:
 `stripInvisible` が双方向アイソレート（U+2066–U+2069）を除去していませんでした。
@@ -55,10 +56,10 @@ Test Files  8 passed (8)
 ## 3. E2Eテスト（Playwright、本番ビルドに対して）
 
 ```
-18 passed (52.7s)
+20 passed (35.7s)
 ```
 
-（クリーンビルド後の最終実行。スタンプの可読性修正を含む版で再実行しています。）
+（クリーンビルド後の最終実行。）
 
 - **desktop**: Chromium 1280×720
 - **mobile**: WebKit / iPhone 13 プリセット（375×812）
@@ -74,9 +75,15 @@ Test Files  8 passed (8)
 | rejects input too short | 8文字未満で送信不可。ページは壊れない |
 | treats an embedded instruction as data | 命令入り入力でも構造が保たれ、「投票できない」当事者が残る |
 | has no horizontal overflow | 全工程完了後に横スクロール 0px |
+| switches the substance, not only the chrome | 言語切替で**画面の枠組みだけでなく、前提・根拠・2050年の証言の本文まで**英語になる。日本語に戻せる |
 
-**この過程で見つかって直した実バグ**:
-モバイル（390px）で指標比較テーブルがページを 43px 横に引っぱっていました。
+**この過程で見つかって直した実バグ（2件）**:
+
+1. **英語に切り替えても記述の本文が日本語のままでした。** `Claim` が単一の
+   `text` しか持っておらず、画面の枠組みだけが英語になる状態でした。
+   実機で切り替えて発見。`Claim.textEn` を追加し、脚本24記述と派生16記述、
+   2050年の証言3本すべてに英語を用意し、単体6件とE2E1件で固定しました。
+2. モバイル（390px）で指標比較テーブルがページを 43px 横に引っぱっていました。
 `overflow-x-auto` の内側にありながら、文書のスクロール幅に寄与していたためです。
 横スクロール表をやめ、スマートフォンでは積み上げ表示に切り替えました
 （`src/components/CoreSamples.tsx`）。修正後、`scrollWidth === clientWidth`（390px）。

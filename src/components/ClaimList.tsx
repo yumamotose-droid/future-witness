@@ -32,7 +32,7 @@ export function ClaimList({
             className="claim max-w-[46rem] text-[0.9375rem] leading-[1.95]"
             data-kind={claim.kind}
           >
-            {claim.text}
+            {lang === "en" ? (claim.textEn ?? claim.text) : claim.text}
             {claim.sourceIds.length > 0 ? (
               <span className="ml-1 whitespace-nowrap">
                 {claim.sourceIds.map((id) => {

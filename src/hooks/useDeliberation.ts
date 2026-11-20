@@ -27,6 +27,8 @@ export interface DeliberationState {
   mode: RunMode | null;
   model: string | null;
   runId: string | null;
+  /** The language the run was generated in; narration cannot change after. */
+  runLang: Lang | null;
   framing: Framing | null;
   options: Option[];
   statements: Statement[];
@@ -44,6 +46,7 @@ const INITIAL: DeliberationState = {
   mode: null,
   model: null,
   runId: null,
+  runLang: null,
   framing: null,
   options: [],
   statements: [],
@@ -83,6 +86,7 @@ export function useDeliberation() {
             mode: event.mode,
             model: event.model,
             runId: event.runId,
+            runLang: event.lang,
           };
         case "phase":
           return { ...prev, phase: event.phase };
@@ -117,7 +121,15 @@ export function useDeliberation() {
             ),
           };
         case "voice-end":
-          return { ...prev, activeVoice: null };
+          return {
+            ...prev,
+            activeVoice: null,
+            voices: prev.voices.map((v) =>
+              v.scenarioId === event.scenarioId && event.bodyAlt
+                ? { ...v, bodyAlt: event.bodyAlt }
+                : v,
+            ),
+          };
         case "audit":
           return { ...prev, audit: event.data };
         case "notice":

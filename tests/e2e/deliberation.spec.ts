@@ -175,3 +175,42 @@ test.describe("robustness", () => {
     expect(overflow).toBeLessThanOrEqual(1);
   });
 });
+
+test.describe("the two languages", () => {
+  test("switches the substance, not only the chrome", async ({ page }) => {
+    await runDemoThroughGate(page);
+    await expect(
+      page.getByRole("heading", { name: "検証記録" }),
+    ).toBeVisible({ timeout: 60_000 });
+
+    await page.getByRole("button", { name: "English" }).click();
+
+    // Chrome.
+    await expect(
+      page.getByRole("heading", { name: "Verification record" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Citations removed as non-existent").first(),
+    ).toBeVisible();
+
+    // Substance: the premises and the evidence must be in English too.
+    await expect(
+      page.getByText(/The question assumes that .economic development./).first(),
+    ).toBeVisible();
+    await expect(
+      page
+        .getByText(/In FY2024 the land use, land-use change and forestry/)
+        .first(),
+    ).toBeVisible();
+
+    // And the 2050 testimony.
+    await expect(
+      page.getByText(/it smells of the car park/).first(),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "日本語" }).click();
+    await expect(
+      page.getByRole("heading", { name: "検証記録" }),
+    ).toBeVisible();
+  });
+});

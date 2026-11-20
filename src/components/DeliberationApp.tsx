@@ -326,7 +326,9 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                         className="claim max-w-[46rem] text-[0.9375rem] leading-[1.95]"
                         data-kind={claim.kind}
                       >
-                        {claim.text}
+                        {lang === "en"
+                          ? (claim.textEn ?? claim.text)
+                          : claim.text}
                         {claim.sourceIds.map((id) => {
                           const n = citationIndex.get(id);
                           return n ? (
@@ -442,6 +444,7 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                     voices={state.voices}
                     activeVoice={state.activeVoice}
                     lang={lang}
+                    runLang={state.runLang}
                     narration={narration}
                   />
                 ) : null}
