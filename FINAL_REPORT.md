@@ -77,7 +77,7 @@ npm run start -- --port 3100
 
 ## 4. GitHub リポジトリ
 
-**作成済み（private）**: <https://github.com/yumamotose-droid/future-witness>
+**作成済み・公開中**: <https://github.com/yumamotose-droid/future-witness>
 
 9コミット・114ファイルをプッシュ済み。プッシュ前に全履歴を走査し、
 APIキー・トークン・個人のメールアドレスが含まれないことを確認しています。
@@ -85,12 +85,18 @@ APIキー・トークン・個人のメールアドレスが含まれないこ�
 Playwright のレポートは除外されています。証跡スクリーンショット19枚は
 意図的に含めています。
 
-**public ではありません。** 公開は不可逆な操作のため、本人の判断に残しました。
-コンテストの成果物URLとして審査員に見せる場合は公開が必要です。
+**公開済みです。** 応募の成果物URLとしてそのまま使えます。
+未認証でのアクセスを確認済み（API・raw ともに 200）。
+公開されている `.env.example` の値はすべて空欄です。
+
+非公開に戻す場合:
 
 ```bash
-gh repo edit yumamotose-droid/future-witness --visibility public
+gh repo edit yumamotose-droid/future-witness --visibility private
 ```
+
+ただし、一度公開されたものはクローンやアーカイブに残りうるため、
+非公開化は「今後の閲覧を止める」効果に留まります。
 
 ## 5. 採用した技術
 
@@ -166,7 +172,7 @@ SCAツールの導入、認証がないことによる濫用時の帰属不能�
 | # | 操作 | 理由 |
 | --- | --- | --- |
 | 1 | Gemini API キーの取得と設定 | 認証情報の新規取得 |
-| 2 | リポジトリを public にするか判断する | 公開は不可逆。作成とプッシュは完了済み |
+| 2 | ~~リポジトリの作成・公開~~ | **完了**（public） |
 | 3 | Vercel アカウント／プロジェクト作成とデプロイ | 同上 |
 | 4 | 90秒デモ動画の撮影とYouTube限定公開 | 同上 |
 | 5 | Google AI Challenge への応募 | 正式応募は応募者本人の行為 |
