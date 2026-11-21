@@ -1,7 +1,6 @@
-# Not needed to build or run the app. Keeps CLI deploys small.
-# (Git-based deployments clone the repository and ignore this file.)
+# Nothing here is needed to build the site, and the demo video alone is 8 MB.
+.env*
 artifacts
 tests
-scripts
 playwright.config.ts
-vitest.config.ts
+test-results
