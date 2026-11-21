@@ -209,9 +209,10 @@ function mapError(error: unknown): SpeechError {
   if (/429|RESOURCE_EXHAUSTED|quota/i.test(message)) {
     return new SpeechError(message, "upstream", true);
   }
-  // A 4xx that is not a quota error was refused before anything was
-  // generated, so nothing was billed and the reservation can be returned.
-  if (/^4\d\d\b/.test(message)) {
+  // Refused before generation, so nothing was billed: a malformed request,
+  // a bad key, no permission, no such model. Deliberately not every 4xx —
+  // 408 and 409 can follow work the service has already done.
+  if (/^4(00|01|03|04)\b/.test(message)) {
     return new SpeechError(message, "rejected_before_generating", false);
   }
   if (/503|UNAVAILABLE|overloaded/i.test(message)) {
@@ -313,7 +314,10 @@ export async function synthesize(req: SpeakRequest): Promise<SpeechResult> {
   const estimate = text.length * SECONDS_PER_CHAR;
   reserve(estimate);
   let produced = 0;
-  let refundable = false;
+  // Sticky in the strict direction: one attempt that may have been billed
+  // forfeits the refund, however the next attempt fails. Overwriting this per
+  // attempt meant a 503 followed by a 400 looked like a clean refusal.
+  let refundable = true;
   try {
     let lastError: SpeechError | undefined;
     for (const model of [TTS_MODEL, TTS_FALLBACK_MODEL]) {
@@ -332,7 +336,7 @@ export async function synthesize(req: SpeakRequest): Promise<SpeechResult> {
         return result;
       } catch (error) {
         const mapped = mapError(error);
-        refundable = mapped.code === "rejected_before_generating";
+        refundable = refundable && mapped.code === "rejected_before_generating";
         if (!mapped.retryable) throw mapped;
         lastError = mapped;
       }

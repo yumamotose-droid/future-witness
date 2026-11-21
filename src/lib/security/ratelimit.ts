@@ -80,52 +80,72 @@ export interface RateLimitResult {
 }
 
 /**
- * Free one slot by dropping whoever is least limited.
+ * Free one slot, but only by dropping a bucket that is already full.
  *
- * Evicting the least recently used key looks reasonable and is exploitable:
- * exhaust your own bucket, flood the map until it is the oldest, and it comes
- * back empty — a reset on demand. Evicting the *fullest* bucket inverts that.
- * A bucket at capacity carries no information, so dropping it costs nothing,
- * and the flood's own fresh keys are the fullest things in the map, so a
- * flood evicts itself before it reaches anyone being limited.
+ * Evicting the least recently used key is exploitable: exhaust your own
+ * bucket, flood the map until it is the oldest, and it comes back empty — a
+ * reset on demand. Evicting the *fullest* bucket is better but still erases
+ * limit state once every bucket is partly spent. So only a bucket that has
+ * refilled to capacity may go: those carry no information at all.
  *
- * Something is always evicted. Refusing instead would mean a full map locks
- * out every new reader, which is a cheaper denial of service than the one it
- * prevents. The scan is bounded because this runs on every request.
+ * Each bucket is measured against the limits it was created with, since all
+ * three routes share this map and the config of whichever route is asking
+ * says nothing about the others.
  */
 const EVICTION_SCAN = 256;
 
-function makeRoom(now: number): void {
-  let candidate: string | undefined;
-  let fullest = -1;
+function makeRoom(now: number): boolean {
   let scanned = 0;
   for (const [key, bucket] of buckets) {
     if (scanned++ >= EVICTION_SCAN) break;
+    if (key.endsWith(OVERFLOW_SUFFIX)) continue;
     const refilled = Math.min(
       bucket.capacity,
       bucket.tokens + Math.max(0, now - bucket.updatedAt) * bucket.refillPerMs,
     );
-    const fraction = refilled / bucket.capacity;
-    if (fraction > fullest) {
-      fullest = fraction;
-      candidate = key;
+    if (refilled >= bucket.capacity) {
+      buckets.delete(key);
+      return true;
     }
-    if (fraction >= 1) break;
   }
-  if (candidate !== undefined) buckets.delete(candidate);
+  return false;
+}
+
+/**
+ * Where a new caller goes when the map is full of callers being limited.
+ *
+ * The two obvious answers are both wrong. Handing out a fresh private bucket
+ * forgets whoever was evicted to make space, which is what a flood is trying
+ * to arrange. Refusing outright means filling the map locks out every new
+ * reader, a cheaper denial of service than the one being prevented.
+ *
+ * So the newcomer shares one coarse bucket per route instead. Nobody's limit
+ * is erased, service continues, and the crowd that caused the overflow is
+ * rate limited together rather than individually — which is the right answer
+ * when individual identity can no longer be tracked.
+ */
+const OVERFLOW_SUFFIX = ":__overflow";
+
+function overflowKey(key: string): string {
+  const colon = key.indexOf(":");
+  return `${colon > 0 ? key.slice(0, colon) : "default"}${OVERFLOW_SUFFIX}`;
 }
 
 export function consume(
-  key: string,
+  requested: string,
   cost = 1,
   config: RateLimitConfig = DELIBERATE_LIMIT,
   now = Date.now(),
 ): RateLimitResult {
-  const existing = buckets.get(key);
+  let key = requested;
+  let existing = buckets.get(key);
   if (existing) {
+    // Refresh insertion order so an active caller is scanned last.
     buckets.delete(key);
-  } else if (buckets.size >= MAX_KEYS) {
-    makeRoom(now);
+  } else if (buckets.size >= MAX_KEYS && !makeRoom(now)) {
+    key = overflowKey(key);
+    existing = buckets.get(key);
+    if (existing) buckets.delete(key);
   }
   const bucket = existing ?? {
     tokens: config.capacity,

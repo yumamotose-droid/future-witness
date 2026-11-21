@@ -93,7 +93,9 @@ describe("synthesize", () => {
 
   it("sends the line verbatim and the direction beside it, never inside it", async () => {
     // Putting the direction in the text made every voice read it aloud.
-    const fetchMock = vi.fn(async (_url: string, _init: RequestInit) => audioResponse(2));
+    const fetchMock = vi.fn<(url: string, init: RequestInit) => Promise<Response>>(
+      async () => audioResponse(2),
+    );
     vi.stubGlobal("fetch", fetchMock);
 
     await synthesize({ text: "ここだけを読む。", agent: "MIRAI" });
@@ -157,6 +159,25 @@ describe("synthesize", () => {
       vi.fn(async () => ({ ok: false, text: async () => "503 unavailable" }) as unknown as Response),
     );
     await expect(synthesize({ text: "失敗する。", agent: "MIRAI" })).rejects.toBeInstanceOf(
+      SpeechError,
+    );
+    expect(speechSecondsSpent()).toBeGreaterThan(0);
+  });
+
+  it("forfeits the refund once any attempt may have been billed", async () => {
+    // A 503 reaches the service and may generate before failing; a 400 on the
+    // retry does not undo that.
+    let call = 0;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        call += 1;
+        return call === 1
+          ? ({ ok: false, text: async () => "503 unavailable" } as unknown as Response)
+          : ({ ok: false, text: async () => "400 bad request" } as unknown as Response);
+      }),
+    );
+    await expect(synthesize({ text: "二段階で失敗。", agent: "MIRAI" })).rejects.toBeInstanceOf(
       SpeechError,
     );
     expect(speechSecondsSpent()).toBeGreaterThan(0);
