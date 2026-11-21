@@ -69,14 +69,51 @@ export interface RateLimitResult {
   retryAfterSeconds: number;
 }
 
+/**
+ * Free one slot without forgetting anyone who is currently limited.
+ *
+ * Evicting the least recently used key looks reasonable and is exploitable:
+ * exhaust your own bucket, flood the map with junk keys until your bucket is
+ * the oldest, and it comes back empty — a full reset on demand. A bucket that
+ * has refilled to capacity carries no information, so only those may be
+ * dropped. The scan is bounded because this runs on every request.
+ */
+const EVICTION_SCAN = 256;
+
+function makeRoom(now: number, config: RateLimitConfig): boolean {
+  let scanned = 0;
+  for (const [key, bucket] of buckets) {
+    if (scanned++ >= EVICTION_SCAN) break;
+    const refilled = Math.min(
+      config.capacity,
+      bucket.tokens + Math.max(0, now - bucket.updatedAt) * config.refillPerMs,
+    );
+    if (refilled >= config.capacity) {
+      buckets.delete(key);
+      return true;
+    }
+  }
+  return false;
+}
+
 export function consume(
   key: string,
   cost = 1,
   config: RateLimitConfig = DELIBERATE_LIMIT,
   now = Date.now(),
 ): RateLimitResult {
-  if (buckets.size > MAX_KEYS) buckets.clear();
-  const bucket = buckets.get(key) ?? {
+  const existing = buckets.get(key);
+  if (existing) {
+    // Refresh recency so an active caller is never the eviction candidate.
+    buckets.delete(key);
+  } else if (buckets.size >= MAX_KEYS && !makeRoom(now, config)) {
+    // Every tracked caller still owes tokens and there is nowhere to put a
+    // new one. Refusing is the safe direction: admitting this key would mean
+    // forgetting someone who is being limited, which is what an attacker
+    // flooding the map is trying to arrange.
+    return { ok: false, remaining: 0, retryAfterSeconds: 60 };
+  }
+  const bucket = existing ?? {
     tokens: config.capacity,
     updatedAt: now,
   };
@@ -102,11 +139,31 @@ export function consume(
   };
 }
 
+/**
+ * Who to count this request against.
+ *
+ * The leftmost entry of `x-forwarded-for` is whatever the client typed, so
+ * keying on it hands out a fresh bucket to anyone who sends a different value
+ * each time — which, now that one of these routes bills for audio, is a way
+ * to spend someone else's money rather than merely to skip a queue.
+ *
+ * `x-vercel-forwarded-for` is written by the platform's own proxy and cannot
+ * be set from outside, so it is preferred. Behind any other single trusted
+ * proxy the last entry is the one that proxy appended, so that is the one to
+ * read; forged entries sit to its left and are ignored. With no proxy header
+ * at all everything shares one bucket, which is strict rather than open.
+ */
 export function clientKey(headers: Headers, scope = "default"): string {
-  const forwarded = headers.get("x-forwarded-for");
+  const trusted = headers.get("x-vercel-forwarded-for")?.trim();
+  const chain = headers
+    .get("x-forwarded-for")
+    ?.split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
   const ip =
-    forwarded?.split(",")[0]?.trim() ||
-    headers.get("x-real-ip") ||
+    trusted ||
+    chain?.[chain.length - 1] ||
+    headers.get("x-real-ip")?.trim() ||
     "unknown";
   return `${scope}:${ip}`;
 }

@@ -70,7 +70,39 @@ export interface SpeechResult {
   readonly cached: boolean;
 }
 
+/**
+ * How much speech one request could possibly produce.
+ *
+ * Measured Japanese runs at roughly four characters a second; three is the
+ * pessimistic figure, which is the one a reservation needs. The point is that
+ * the ceiling is checked against what a call *might* cost before it is made,
+ * not against what the last one did.
+ */
+const SECONDS_PER_CHAR = 1 / 3;
+
+/**
+ * A ceiling per minute as well as per process.
+ *
+ * The process ceiling bounds a long-running leak; it does nothing about a
+ * burst, and a burst is what an expensive endpoint has to survive. Audio
+ * seconds refill at this rate no matter how many addresses the requests
+ * appear to come from, so this is the cap that holds when per-client keying
+ * is defeated.
+ */
+const SECONDS_PER_MINUTE_CAP = 300;
+
+/**
+ * At most this many syntheses in flight at once.
+ *
+ * Reservations make the ceilings correct under concurrency; they do not stop
+ * a hundred simultaneous calls from being issued in the window before any of
+ * them return. This does.
+ */
+const MAX_CONCURRENT = 4;
+
 let audioSecondsSpent = 0;
+let inFlight = 0;
+const minuteBucket = { seconds: SECONDS_PER_MINUTE_CAP, updatedAt: Date.now() };
 
 export function speechSecondsSpent(): number {
   return audioSecondsSpent;
@@ -79,7 +111,49 @@ export function speechSecondsSpent(): number {
 /** Test seam. */
 export function resetSpeechBudget(): void {
   audioSecondsSpent = 0;
+  inFlight = 0;
+  minuteBucket.seconds = SECONDS_PER_MINUTE_CAP;
+  minuteBucket.updatedAt = Date.now();
   cache.clear();
+}
+
+/**
+ * Take the worst case out of every budget before calling the model.
+ *
+ * Checking a counter that is only incremented after the call returns lets any
+ * number of requests pass the check together and bill in parallel. Reserving
+ * first and reconciling afterwards means the ceilings hold whatever the
+ * concurrency, at the cost of briefly over-counting a call that turns out
+ * shorter than feared.
+ */
+function reserve(estimate: number, now = Date.now()): void {
+  if (inFlight >= MAX_CONCURRENT) {
+    throw new SpeechError("音声の生成が混み合っています", "budget", true);
+  }
+  const refill = ((now - minuteBucket.updatedAt) / 60_000) * SECONDS_PER_MINUTE_CAP;
+  minuteBucket.seconds = Math.min(SECONDS_PER_MINUTE_CAP, minuteBucket.seconds + refill);
+  minuteBucket.updatedAt = now;
+
+  if (audioSecondsSpent + estimate > MAX_AUDIO_SECONDS_PER_PROCESS) {
+    throw new SpeechError("この処理系の音声生成の上限に達しました", "budget");
+  }
+  if (minuteBucket.seconds < estimate) {
+    throw new SpeechError("音声の生成が集中しています", "budget", true);
+  }
+  minuteBucket.seconds -= estimate;
+  audioSecondsSpent += estimate;
+  inFlight += 1;
+}
+
+/** Replace the reservation with what the call actually produced. */
+function settle(estimate: number, actual: number): void {
+  const difference = actual - estimate;
+  audioSecondsSpent = Math.max(0, audioSecondsSpent + difference);
+  minuteBucket.seconds = Math.min(
+    SECONDS_PER_MINUTE_CAP,
+    Math.max(0, minuteBucket.seconds - difference),
+  );
+  inFlight = Math.max(0, inFlight - 1);
 }
 
 /**
@@ -220,32 +294,35 @@ export async function synthesize(req: SpeakRequest): Promise<SpeechResult> {
     return { ...hit, cached: true };
   }
 
-  if (audioSecondsSpent >= MAX_AUDIO_SECONDS_PER_PROCESS) {
-    throw new SpeechError("この処理系の音声生成の上限に達しました", "budget");
-  }
-
-  let lastError: SpeechError | undefined;
-  for (const model of [TTS_MODEL, TTS_FALLBACK_MODEL]) {
-    try {
-      const wav = await callModel(model, text, casting.voice, casting.styleJa, req.signal);
-      const seconds = secondsOf(wav);
-      audioSecondsSpent += seconds;
-      const result: SpeechResult = {
-        wav,
-        seconds,
-        voice: casting.voice,
-        model,
-        cached: false,
-      };
-      remember(key, result);
-      return result;
-    } catch (error) {
-      const mapped = mapError(error);
-      if (!mapped.retryable) throw mapped;
-      lastError = mapped;
+  const estimate = text.length * SECONDS_PER_CHAR;
+  reserve(estimate);
+  let produced = 0;
+  try {
+    let lastError: SpeechError | undefined;
+    for (const model of [TTS_MODEL, TTS_FALLBACK_MODEL]) {
+      try {
+        const wav = await callModel(model, text, casting.voice, casting.styleJa, req.signal);
+        const seconds = secondsOf(wav);
+        produced = seconds;
+        const result: SpeechResult = {
+          wav,
+          seconds,
+          voice: casting.voice,
+          model,
+          cached: false,
+        };
+        remember(key, result);
+        return result;
+      } catch (error) {
+        const mapped = mapError(error);
+        if (!mapped.retryable) throw mapped;
+        lastError = mapped;
+      }
     }
+    throw lastError ?? new SpeechError("no TTS model answered", "upstream", true);
+  } finally {
+    settle(estimate, produced);
   }
-  throw lastError ?? new SpeechError("no TTS model answered", "upstream", true);
 }
 
 export function speechConfigured(): boolean {

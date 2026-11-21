@@ -39,12 +39,15 @@ describe("rate limiting", () => {
   });
 
   it("derives a key from the forwarding headers", () => {
+    // The last entry is the one the nearest proxy appended. This test used to
+    // expect the first, which is whatever the caller typed — keying on it let
+    // anyone mint a fresh bucket per request.
     expect(
       clientKey(
         new Headers({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" }),
         "deliberate",
       ),
-    ).toBe("deliberate:203.0.113.7");
+    ).toBe("deliberate:10.0.0.1");
     expect(clientKey(new Headers({ "x-real-ip": "203.0.113.8" }))).toBe(
       "default:203.0.113.8",
     );
