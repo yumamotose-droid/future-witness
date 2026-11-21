@@ -51,3 +51,6 @@ next-env.d.ts
 /artifacts/video/captions
 /artifacts/video/screen.webm
 /artifacts/video/narration.wav
+
+# Generated speech samples; regenerate with `npx tsx scripts/check-voices.mts`
+artifacts/voice/

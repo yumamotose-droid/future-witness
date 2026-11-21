@@ -40,6 +40,21 @@ export const BASELINE_LIMIT: RateLimitConfig = {
   refillPerMs: 1 / 20_000,
 };
 
+/**
+ * Speech is requested far more often than a deliberation: every passage the
+ * reader plays, replays or skips ahead to is one call. The bucket is wide
+ * enough that nobody meets it by listening, and refills fast enough that a
+ * long session never stalls — while still bounding a script that asks for
+ * audio in a loop, which is the expensive thing to leave open.
+ */
+export const SPEAK_LIMIT: RateLimitConfig = {
+  capacity:
+    Number.isFinite(CONFIGURED_CAPACITY) && CONFIGURED_CAPACITY > 0
+      ? CONFIGURED_CAPACITY
+      : 40,
+  refillPerMs: 1 / 4_000,
+};
+
 interface Bucket {
   tokens: number;
   updatedAt: number;
