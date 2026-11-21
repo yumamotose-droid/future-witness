@@ -1,0 +1,22 @@
+[
+  {
+    "target": "desktop-1440（検証記録パネル）",
+    "kind": "タップ領域が44px未満",
+    "detail": "button:閉じる 当たり70x39"
+  },
+  {
+    "target": "iphone-13（検証記録パネル）",
+    "kind": "タップ領域が44px未満",
+    "detail": "button:閉じる 当たり70x39"
+  },
+  {
+    "target": "pixel-7（検証記録パネル）",
+    "kind": "タップ領域が44px未満",
+    "detail": "button:閉じる 当たり70x39"
+  },
+  {
+    "target": "ipad-mini（検証記録パネル）",
+    "kind": "タップ領域が44px未満",
+    "detail": "button:閉じる 当たり70x39"
+  }
+]

@@ -54,3 +54,4 @@ next-env.d.ts
 
 # Generated speech samples; regenerate with `npx tsx scripts/check-voices.mts`
 artifacts/voice/
+artifacts/screenshots-voice/
