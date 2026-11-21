@@ -54,6 +54,37 @@ describe("clientKey", () => {
   it("falls back to one shared bucket rather than to no limit", () => {
     expect(clientKey(new Headers(), "speak")).toBe("speak:unknown");
   });
+
+  it("refuses a value that is not an address", () => {
+    // The value lands inside a map key, and this module gives some keys
+    // meaning — a caller must not be able to write one of those.
+    for (const forged of [
+      "1.2.3.4:__overflow:0",
+      "__overflow",
+      "999.1.1.1",
+      "not-an-ip",
+      "a".repeat(80),
+    ]) {
+      expect(clientKey(new Headers({ "x-vercel-forwarded-for": forged }), "speak")).toBe(
+        "speak:unknown",
+      );
+    }
+  });
+
+  it("counts an IPv6 caller by routing prefix, not by address", () => {
+    // One assignment is a whole network of addresses; tracking each one
+    // separately would be tracking nothing.
+    const first = clientKey(
+      new Headers({ "x-vercel-forwarded-for": "2001:db8:1234:5678:1:2:3:4" }),
+      "speak",
+    );
+    const second = clientKey(
+      new Headers({ "x-vercel-forwarded-for": "2001:db8:1234:5678:9:a:b:c" }),
+      "speak",
+    );
+    expect(first).toBe(second);
+    expect(first).toContain("2001:db8:1234:5678");
+  });
 });
 
 describe("rate limiter eviction", () => {

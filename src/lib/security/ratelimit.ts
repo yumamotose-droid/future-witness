@@ -11,6 +11,12 @@
 export interface RateLimitConfig {
   capacity: number;
   refillPerMs: number;
+  /**
+   * A shared bucket standing in for callers that could not be tracked
+   * individually. Marked on the object rather than detected from the key,
+   * because the key contains a value the caller supplied.
+   */
+  overflow?: boolean;
 }
 
 /**
@@ -68,6 +74,12 @@ interface Bucket {
    */
   capacity: number;
   refillPerMs: number;
+  /**
+   * A shared bucket standing in for callers that could not be tracked
+   * individually. Marked on the object rather than detected from the key,
+   * because the key contains a value the caller supplied.
+   */
+  overflow?: boolean;
 }
 
 const buckets = new Map<string, Bucket>();
@@ -98,7 +110,7 @@ function makeRoom(now: number): boolean {
   let scanned = 0;
   for (const [key, bucket] of buckets) {
     if (scanned++ >= EVICTION_SCAN) break;
-    if (key.endsWith(OVERFLOW_SUFFIX)) continue;
+    if (bucket.overflow) continue;
     const refilled = Math.min(
       bucket.capacity,
       bucket.tokens + Math.max(0, now - bucket.updatedAt) * bucket.refillPerMs,
@@ -119,16 +131,23 @@ function makeRoom(now: number): boolean {
  * to arrange. Refusing outright means filling the map locks out every new
  * reader, a cheaper denial of service than the one being prevented.
  *
- * So the newcomer shares one coarse bucket per route instead. Nobody's limit
- * is erased, service continues, and the crowd that caused the overflow is
- * rate limited together rather than individually — which is the right answer
- * when individual identity can no longer be tracked.
+ * So the newcomer shares a bucket instead — but not one bucket for everyone,
+ * which would let a single flooder drain the capacity meant for every other
+ * overflowed reader. The address is hashed into a fixed set of shards, so an
+ * attacker occupies a slice rather than the whole, and an unrelated reader
+ * who lands elsewhere is unaffected.
  */
-const OVERFLOW_SUFFIX = ":__overflow";
+const OVERFLOW_SHARDS = 16;
 
 function overflowKey(key: string): string {
   const colon = key.indexOf(":");
-  return `${colon > 0 ? key.slice(0, colon) : "default"}${OVERFLOW_SUFFIX}`;
+  const scope = colon > 0 ? key.slice(0, colon) : "default";
+  const address = colon > 0 ? key.slice(colon + 1) : key;
+  let hash = 0;
+  for (let i = 0; i < address.length; i++) {
+    hash = (hash * 31 + address.charCodeAt(i)) | 0;
+  }
+  return `${scope}:__overflow:${Math.abs(hash) % OVERFLOW_SHARDS}`;
 }
 
 export function consume(
@@ -138,12 +157,14 @@ export function consume(
   now = Date.now(),
 ): RateLimitResult {
   let key = requested;
+  let overflow = false;
   let existing = buckets.get(key);
   if (existing) {
     // Refresh insertion order so an active caller is scanned last.
     buckets.delete(key);
   } else if (buckets.size >= MAX_KEYS && !makeRoom(now)) {
     key = overflowKey(key);
+    overflow = true;
     existing = buckets.get(key);
     if (existing) buckets.delete(key);
   }
@@ -152,6 +173,7 @@ export function consume(
     updatedAt: now,
     capacity: config.capacity,
     refillPerMs: config.refillPerMs,
+    ...(overflow ? { overflow: true } : {}),
   };
   const elapsed = Math.max(0, now - bucket.updatedAt);
   const tokens = Math.min(
@@ -178,30 +200,56 @@ export function consume(
 /**
  * Who to count this request against.
  *
- * The leftmost entry of `x-forwarded-for` is whatever the client typed, so
+ * The leftmost entry of `x-forwarded-for` is whatever the caller typed, so
  * keying on it hands out a fresh bucket to anyone who sends a different value
  * each time — which, now that one of these routes bills for audio, is a way
- * to spend someone else's money rather than merely to skip a queue.
+ * to spend the project's money rather than merely to skip a queue.
  *
  * `x-vercel-forwarded-for` is written by the platform's own proxy and cannot
  * be set from outside, so it is preferred. Behind any other single trusted
- * proxy the last entry is the one that proxy appended, so that is the one to
- * read; forged entries sit to its left and are ignored. With no proxy header
- * at all everything shares one bucket, which is strict rather than open.
+ * proxy the last entry is the one that proxy appended; forged entries sit to
+ * its left and are ignored.
+ *
+ * Whatever is found is then checked against the shape of an address, because
+ * the value ends up inside a map key and this module gives some keys meaning.
+ * Anything that is not an address becomes `unknown` and shares one bucket.
+ * IPv6 is counted per /64: a single assignment is a whole network's worth of
+ * addresses, and tracking them separately would be tracking nothing.
  */
+const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+const IPV6_GROUP = /^[0-9a-f]{1,4}$/i;
+
+function normalizeAddress(raw: string | undefined): string | null {
+  const value = raw?.trim().toLowerCase();
+  if (!value || value.length > 45) return null;
+
+  const v4 = IPV4.exec(value);
+  if (v4) {
+    return v4.slice(1).every((part) => Number(part) <= 255) ? value : null;
+  }
+
+  if (!value.includes(":")) return null;
+  const parts = value.split("::");
+  if (parts.length > 2) return null;
+  const groups = value.split(/:+/).filter(Boolean);
+  if (groups.length > 8 || !groups.every((group) => IPV6_GROUP.test(group))) return null;
+  // Only the routing prefix is kept; the host half is not an identity.
+  const head = value.split("::")[0].split(":").filter(Boolean).slice(0, 4);
+  return `${head.join(":")}::/64`;
+}
+
 export function clientKey(headers: Headers, scope = "default"): string {
-  const trusted = headers.get("x-vercel-forwarded-for")?.trim();
   const chain = headers
     .get("x-forwarded-for")
     ?.split(",")
     .map((entry) => entry.trim())
     .filter(Boolean);
-  const ip =
-    trusted ||
-    chain?.[chain.length - 1] ||
-    headers.get("x-real-ip")?.trim() ||
+  const address =
+    normalizeAddress(headers.get("x-vercel-forwarded-for") ?? undefined) ??
+    normalizeAddress(chain?.[chain.length - 1]) ??
+    normalizeAddress(headers.get("x-real-ip") ?? undefined) ??
     "unknown";
-  return `${scope}:${ip}`;
+  return `${scope}:${address}`;
 }
 
 /** Test seam. */

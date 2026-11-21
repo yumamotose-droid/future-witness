@@ -452,3 +452,165 @@ body {
     grid-template-rows: subgrid;
   }
 }
+
+/* ─── The opening, and the presence at the centre of it ───────────────────
+   One screen, two sentences, one thing to do.
+
+   The form and the words do not share space. An earlier version layered the
+   text over the rays and both lost: the ring became a texture behind writing
+   and the writing became hard to read. Separating them is what produces the
+   emptiness this screen is mostly made of. */
+
+.stage {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.opening {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto auto;
+  justify-items: center;
+  gap: clamp(1rem, 3vh, 2rem);
+  padding: clamp(1.5rem, 4vh, 3rem) clamp(1.25rem, 5vw, 3rem);
+  padding-bottom: calc(clamp(1.5rem, 4vh, 3rem) + env(safe-area-inset-bottom, 0px));
+}
+
+.opening__field {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.opening__field > .stage {
+  width: min(42vh, 72vw, 22rem);
+  height: min(42vh, 72vw, 22rem);
+  opacity: 0.8;
+}
+
+.opening__words {
+  text-align: center;
+  max-width: min(36rem, 92vw);
+}
+
+/* Japanese does not hyphenate, and a browser will happily break 「ない。」
+   into 「な」 and 「い。」 if allowed to. It is not allowed to: the line may
+   break after a comma, and otherwise the type scales down instead. */
+.opening__line,
+.opening__answer,
+.opening__caveat {
+  word-break: keep-all;
+  overflow-wrap: normal;
+  line-break: strict;
+}
+
+.opening__line,
+.opening__answer {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+
+.opening__line {
+  font-size: clamp(1.4rem, 4.6vw, 2.5rem);
+}
+
+.opening__answer {
+  margin-top: clamp(1.5rem, 4.5vh, 2.5rem);
+  font-size: clamp(1rem, 3vw, 1.375rem);
+  color: var(--ink-soft);
+}
+
+.opening__en {
+  display: block;
+  margin-top: 0.9em;
+  font-size: 0.42em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The action is given its own air: it is the only thing on this screen the
+   reader is asked to do, and it should not read as part of the sentence
+   above it. */
+.opening__act {
+  margin-top: clamp(1.75rem, 5vh, 2.75rem);
+}
+
+.opening__begin {
+  display: inline-block;
+  padding: 0.95rem 2.4rem;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.22em;
+  font-size: 0.9rem;
+  transition: border-color 240ms ease, background-color 240ms ease;
+}
+
+.opening__begin:hover,
+.opening__begin:focus-visible {
+  border-color: var(--gold);
+  background: color-mix(in oklab, var(--gold) 10%, transparent);
+}
+
+.opening__aside {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+}
+
+.opening__aside a {
+  color: var(--ink-faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.opening__aside a:hover,
+.opening__aside a:focus-visible {
+  color: var(--ink-soft);
+  border-bottom-color: var(--rule-strong);
+}
+
+.opening__caveat {
+  margin: 0;
+  max-width: min(30rem, 92vw);
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.9;
+  color: var(--ink-faint);
+}
+
+/* The second line, and everything after it, arrive once the first has been
+   allowed to sit there alone. */
+.opening__answer,
+.opening__act,
+.opening__aside {
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 1.6s ease, transform 1.6s ease;
+}
+
+.opening__answer.is-here,
+.opening__act.is-here,
+.opening__aside.is-here {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening__answer,
+  .opening__act,
+  .opening__aside {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
