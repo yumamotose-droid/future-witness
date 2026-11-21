@@ -863,6 +863,7 @@ body {
 }
 
 .sheet__close {
+  position: relative;
   border: 1px solid var(--rule);
   background: transparent;
   color: var(--ink-soft);
@@ -870,6 +871,18 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   cursor: pointer;
+}
+
+/* 44px of target without a 44px box, so the sheet's header stays slim.
+   Measured at 70x39 before this. */
+.sheet__close::after {
+  content: "";
+  position: absolute;
+  inset-block: -0.2rem;
+  inset-inline: 0;
+  min-height: 44px;
+  transform: translateY(-50%);
+  top: 50%;
 }
 
 .sheet__close:hover,

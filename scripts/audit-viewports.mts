@@ -32,9 +32,24 @@ async function runThrough(page: Page) {
     .waitFor({ timeout: 45_000 });
   await page.getByRole("radio").first().check();
   await page.getByRole("button", { name: "立場を記録する" }).click();
-  await page.getByRole("heading", { name: "検証記録" }).waitFor({ timeout: 60_000 });
+  // The verification record now lives behind the rail, so the rail appearing
+  // is what says the run has finished.
+  await page.getByRole("button", { name: /検証記録/ }).waitFor({ timeout: 60_000 });
   // Let the testimony finish writing so nothing is measured mid-reveal.
   await page.waitForTimeout(5_000);
+}
+
+/**
+ * An opened panel is a surface of its own.
+ *
+ * It has its own scroll container, its own padding and its own controls, so
+ * a layout fault inside it would never show in a measurement of the page
+ * behind it.
+ */
+async function openVerification(page: Page) {
+  await page.getByRole("button", { name: /検証記録/ }).first().click();
+  await page.getByRole("dialog", { name: "検証記録" }).waitFor({ timeout: 10_000 });
+  await page.waitForTimeout(600);
 }
 
 async function audit(page: Page, name: string) {
@@ -113,6 +128,8 @@ for (const t of TARGETS) {
   const page = await ctx.newPage();
   await runThrough(page);
   const r = await audit(page, t.name);
+  await openVerification(page);
+  await audit(page, `${t.name}（検証記録パネル）`);
   await page.screenshot({ path: `${OUT}/${t.name}-audit.png`, fullPage: false });
   console.log(
     `${t.name.padEnd(13)} 横${String(r.overflow).padStart(3)}px  ` +
