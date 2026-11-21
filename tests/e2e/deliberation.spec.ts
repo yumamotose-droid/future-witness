@@ -3,6 +3,27 @@ import { expect, test, type Page } from "@playwright/test";
 const DEMO_QUESTION =
   "経済発展のために森林を切り開き、大型商業施設を建設するべきか？";
 
+/**
+ * Open one of the panels behind the rail.
+ *
+ * Evidence, the futures, the objection, the verification record and the
+ * decision record are no longer in the page's main column — the conversation
+ * is. Reaching them is a press, which is what a reader does too, so the
+ * tests do it rather than asserting on a layout that no longer exists.
+ */
+async function openPanel(page: Page, label: string) {
+  // The rail only offers a panel once there is something behind it, which for
+  // the record and the comparison is the end of the run.
+  const trigger = page.getByRole("button", { name: new RegExp(label) }).first();
+  await expect(trigger).toBeVisible({ timeout: 60_000 });
+  await trigger.click();
+  await expect(page.getByRole("dialog", { name: label })).toBeVisible();
+}
+
+async function closePanel(page: Page) {
+  await page.getByRole("button", { name: "閉じる" }).first().click();
+}
+
 async function runDemoThroughGate(page: Page) {
   await page.goto("/deliberate?demo=1");
   // The pre-deliberation record gates the rest of the page.
@@ -41,28 +62,39 @@ test.describe("a complete deliberation", () => {
 
     await runDemoThroughGate(page);
 
-    // STEP 4/5: the core samples and the 2050 testimony.
+    // STEP 4: the futures, now one press away rather than in the column.
+    await openPanel(page, "未来の分岐");
     await expect(
       page.getByRole("heading", { name: "未来のコア標本" }),
     ).toBeVisible({ timeout: 60_000 });
     await expect(page.getByText("2030").first()).toBeVisible();
     await expect(page.getByText("2050").first()).toBeVisible();
+    await closePanel(page);
+
+    // STEP 5: the testimony stays on the main canvas. It is the conversation,
+    // and its hypothetical labelling must not be behind a door.
     await expect(page.getByText("MIRAI").first()).toBeVisible();
+    await expect(page.getByText("仮想シナリオ").first()).toBeVisible();
 
     // STEP 6: the adversary, including its attack on this system.
+    await openPanel(page, "反証");
     await expect(page.getByText("COUNTER").first()).toBeVisible({
       timeout: 60_000,
     });
     await expect(page.getByText(/このシステム/).first()).toBeVisible();
+    await closePanel(page);
 
     // The verification record, with real numbers.
-    const audit = page.getByRole("heading", { name: "検証記録" });
+    await openPanel(page, "検証記録");
+    const audit = page.getByRole("heading", { name: "検証記録" }).last();
     await expect(audit).toBeVisible({ timeout: 60_000 });
     await expect(page.getByText("存在せず削除した出典").first()).toBeVisible();
+    await closePanel(page);
 
-    // Full provenance for every cited document.
+    // Full provenance for every cited document, in its own panel.
+    await openPanel(page, "出典");
     await expect(
-      page.getByRole("heading", { name: "出典", exact: true }),
+      page.getByRole("heading", { name: "出典", exact: true }).last(),
     ).toBeVisible();
     await expect(page.getByText("URL確認日").first()).toBeVisible();
     await expect(
@@ -101,6 +133,7 @@ test.describe("a complete deliberation", () => {
 
   test("produces a downloadable decision record", async ({ page }) => {
     await runDemoThroughGate(page);
+    await openPanel(page, "判断の記録");
     await expect(
       page.getByRole("heading", { name: "意思決定レポート" }),
     ).toBeVisible({ timeout: 60_000 });
@@ -117,6 +150,7 @@ test.describe("a complete deliberation", () => {
 
   test("compares itself against a single chat", async ({ page }) => {
     await runDemoThroughGate(page);
+    await openPanel(page, "単一チャットとの比較");
     await expect(
       page.getByRole("heading", { name: "単一AIチャットとの比較" }),
     ).toBeVisible({ timeout: 60_000 });
@@ -138,8 +172,12 @@ test.describe("robustness", () => {
     await expect(
       page.getByRole("button", { name: "審議をはじめる" }),
     ).toBeDisabled();
-    // The page is still usable.
-    await expect(page.getByRole("heading", { name: "履歴" })).toBeVisible();
+    // The page is still usable. There is no history panel before a first run,
+    // so this checks what is always on the page rather than what the rail
+    // happens to offer.
+    await expect(
+      page.getByRole("heading", { name: "読むときの注意" }),
+    ).toBeVisible();
   });
 
   test("treats an embedded instruction as data, not as a command", async ({
@@ -164,53 +202,62 @@ test.describe("robustness", () => {
     page,
   }) => {
     await runDemoThroughGate(page);
-    await expect(
-      page.getByRole("heading", { name: "検証記録" }),
-    ).toBeVisible({ timeout: 60_000 });
-    const overflow = await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth -
-        document.documentElement.clientWidth,
-    );
-    expect(overflow).toBeLessThanOrEqual(1);
+    await expect(page.getByRole("button", { name: /検証記録/ })).toBeVisible({
+      timeout: 60_000,
+    });
+    const measure = () =>
+      page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      );
+    expect(await measure()).toBeLessThanOrEqual(1);
+
+    // An opened panel is its own surface and can overflow on its own.
+    await openPanel(page, "検証記録");
+    expect(await measure()).toBeLessThanOrEqual(1);
   });
 });
 
 test.describe("the two languages", () => {
   test("switches the substance, not only the chrome", async ({ page }) => {
     await runDemoThroughGate(page);
-    await expect(
-      page.getByRole("heading", { name: "検証記録" }),
-    ).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByRole("button", { name: /検証記録/ })).toBeVisible({
+      timeout: 60_000,
+    });
 
     await page.getByRole("button", { name: "English" }).click();
 
     // Chrome.
+    await openPanel(page, "Verification");
     await expect(
-      page.getByRole("heading", { name: "Verification record" }),
+      page.getByRole("heading", { name: "Verification record" }).last(),
     ).toBeVisible();
     await expect(
       page.getByText("Citations removed as non-existent").first(),
     ).toBeVisible();
+    await closePanel(page);
 
-    // Substance: the premises and the evidence must be in English too.
+    // Substance: the premises are on the main canvas and must be English too.
     await expect(
       page.getByText(/The question assumes that .economic development./).first(),
     ).toBeVisible();
+
+    // The evidence is behind its own panel, and its language follows as well.
+    await openPanel(page, "Evidence");
     await expect(
       page
         .getByText(/In FY2024 the land use, land-use change and forestry/)
         .first(),
     ).toBeVisible();
+    await closePanel(page);
 
-    // And the 2050 testimony.
+    // And the 2050 testimony, which never leaves the main canvas.
     await expect(
       page.getByText(/it smells of the car park/).first(),
     ).toBeVisible();
 
     await page.getByRole("button", { name: "日本語" }).click();
-    await expect(
-      page.getByRole("heading", { name: "検証記録" }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /検証記録/ })).toBeVisible();
   });
 });

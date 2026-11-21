@@ -19,6 +19,7 @@ import { t, PHASE_META } from "@/lib/i18n/dictionary";
 import { useDeliberation } from "@/hooks/useDeliberation";
 import { useDictation } from "@/hooks/useSpeech";
 import { useVoice } from "./VoiceConsole";
+import { PanelRail, PanelSheet, type PanelDefinition } from "./Panels";
 import {
   clearSessions,
   loadSessions,
@@ -63,6 +64,7 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
   const dictation = useDictation(lang, setDraft);
   // A new question silences whatever is being read from the old one.
   const voice = useVoice();
+  const [openPanel, setOpenPanel] = useState<string | null>(null);
   const startedDemo = useRef(false);
   const ledgerRef = useRef<HTMLDivElement | null>(null);
 
@@ -165,6 +167,156 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
 
   const gateOpen = revealed || before !== null;
   const running = state.status === "running";
+
+  /**
+   * What the rail opens.
+   *
+   * Built here rather than inline so the main canvas stays the conversation:
+   * the question, the gate, the testimony and the reader's decision. Each
+   * entry carries a hint saying what is inside, because a door with no label
+   * on the size of the room behind it is not much better than no door.
+   */
+  const panels = useMemo<PanelDefinition[]>(() => {
+    const list: PanelDefinition[] = [];
+
+    if (state.options.length > 0) {
+      list.push({
+        id: "options",
+        label: L.options,
+        hint: `${state.options.length}`,
+        content: (
+          <ul className="border-t border-rule">
+            {state.options.map((option) => (
+              <li key={option.id} className="rule-b py-4">
+                <span className="t-mono mr-4 text-[var(--gold)]">{option.id}</span>
+                <span className="t-display text-[1rem]">
+                  {lang === "ja" ? option.labelJa : option.labelEn}
+                </span>
+                <p className="mt-2 text-[0.875rem] leading-[1.95] text-ink-soft">
+                  {lang === "ja" ? option.summaryJa : option.summaryEn}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ),
+      });
+    }
+
+    if (evidence) {
+      list.push({
+        id: "evidence",
+        label: lang === "ja" ? "確認できる根拠" : "Evidence",
+        hint: `${evidence.claims.length}`,
+        content: (
+          <StatementBlock statement={evidence} lang={lang} citationIndex={citationIndex} />
+        ),
+      });
+    }
+
+    if (state.scenarios.length > 0) {
+      list.push({
+        id: "scenarios",
+        label: lang === "ja" ? "未来の分岐" : "Futures",
+        hint: `${state.scenarios.length}`,
+        content: (
+          <CoreSamples scenarios={state.scenarios} options={state.options} lang={lang} />
+        ),
+      });
+    }
+
+    if (counter) {
+      list.push({
+        id: "counter",
+        label: lang === "ja" ? "反証" : "Objection",
+        hint: `${counter.claims.length}`,
+        content: (
+          <StatementBlock statement={counter} lang={lang} citationIndex={citationIndex} />
+        ),
+      });
+    }
+
+    if (uncertainty) {
+      list.push({
+        id: "uncertainty",
+        label: lang === "ja" ? "わからないこと" : "Unknowns",
+        hint: `${uncertainty.claims.length}`,
+        content: (
+          <StatementBlock statement={uncertainty} lang={lang} citationIndex={citationIndex} />
+        ),
+      });
+    }
+
+    if (state.audit) {
+      list.push({
+        id: "audit",
+        label: lang === "ja" ? "検証記録" : "Verification",
+        // The number that matters most is the one that would be embarrassing.
+        hint: `削除 ${state.audit.rejectedInvented.length + state.audit.rejectedMalformed.length}`,
+        content: <AuditPanel audit={state.audit} lang={lang} />,
+      });
+    }
+
+    if (citationIndex.size > 0) {
+      list.push({
+        id: "sources",
+        label: lang === "ja" ? "出典" : "Sources",
+        hint: `${citationIndex.size}`,
+        content: <SourcesPanel citationIndex={citationIndex} lang={lang} />,
+      });
+    }
+
+    if (state.status === "done" && result) {
+      list.push({
+        id: "record",
+        label: lang === "ja" ? "判断の記録" : "Record",
+        content: (
+          <ReportPanel
+            session={session}
+            result={result}
+            lang={lang}
+            openQuestions={openQuestions}
+            onOpenQuestionsChange={setOpenQuestions}
+          />
+        ),
+      });
+    }
+
+    if (state.status === "done" && question) {
+      list.push({
+        id: "baseline",
+        label: lang === "ja" ? "単一チャットとの比較" : "Single chat",
+        content: <BaselinePanel question={question} lang={lang} audit={state.audit} />,
+      });
+    }
+
+    if (sessions.length > 0) {
+      list.push({
+        id: "history",
+        label: lang === "ja" ? "履歴" : "History",
+        hint: `${sessions.length}`,
+        content: <HistoryPanel sessions={sessions} lang={lang} onClear={clearSessions} />,
+      });
+    }
+
+    return list;
+  }, [
+    L.options,
+    citationIndex,
+
+    counter,
+    evidence,
+    lang,
+    openQuestions,
+    question,
+    result,
+    session,
+    sessions,
+    state.audit,
+    state.options,
+    state.scenarios,
+    state.status,
+    uncertainty,
+  ]);
 
   return (
     <>
@@ -401,44 +553,11 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
 
             {gateOpen ? (
               <>
-                {state.options.length > 0 ? (
-                  <section className="rule-t pt-8">
-                    <h2 className="t-display text-[1.5rem]">{L.options}</h2>
-                    <ul className="mt-6 border-t border-rule">
-                      {state.options.map((option) => (
-                        <li key={option.id} className="rule-b py-4">
-                          <span className="t-mono mr-4 text-[var(--gold)]">
-                            {option.id}
-                          </span>
-                          <span className="t-display text-[1rem]">
-                            {lang === "ja" ? option.labelJa : option.labelEn}
-                          </span>
-                          <p className="mt-2 max-w-[46rem] text-[0.875rem] leading-[1.95] text-ink-soft">
-                            {lang === "ja"
-                              ? option.summaryJa
-                              : option.summaryEn}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ) : null}
-
-                {evidence ? (
-                  <StatementBlock
-                    statement={evidence}
-                    lang={lang}
-                    citationIndex={citationIndex}
-                  />
-                ) : null}
-
-                {state.scenarios.length > 0 ? (
-                  <CoreSamples
-                    scenarios={state.scenarios}
-                    options={state.options}
-                    lang={lang}
-                  />
-                ) : null}
+                <PanelRail
+                  panels={panels}
+                  openId={openPanel}
+                  onOpen={setOpenPanel}
+                />
 
                 {state.voices.length > 0 ? (
                   <VoicePanel
@@ -448,30 +567,6 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                     lang={lang}
                     runLang={state.runLang}
                   />
-                ) : null}
-
-                {counter ? (
-                  <StatementBlock
-                    statement={counter}
-                    lang={lang}
-                    citationIndex={citationIndex}
-                  />
-                ) : null}
-
-                {uncertainty ? (
-                  <StatementBlock
-                    statement={uncertainty}
-                    lang={lang}
-                    citationIndex={citationIndex}
-                  />
-                ) : null}
-
-                {state.audit ? (
-                  <AuditPanel audit={state.audit} lang={lang} />
-                ) : null}
-
-                {citationIndex.size > 0 ? (
-                  <SourcesPanel citationIndex={citationIndex} lang={lang} />
                 ) : null}
 
                 {/* ---------- STEP 8 — the decision is the user's ---------- */}
@@ -522,31 +617,8 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                   )
                 ) : null}
 
-                {state.status === "done" && result ? (
-                  <ReportPanel
-                    session={session}
-                    result={result}
-                    lang={lang}
-                    openQuestions={openQuestions}
-                    onOpenQuestionsChange={setOpenQuestions}
-                  />
-                ) : null}
-
-                {state.status === "done" && question ? (
-                  <BaselinePanel
-                    question={question}
-                    lang={lang}
-                    audit={state.audit}
-                  />
-                ) : null}
               </>
             ) : null}
-
-            <HistoryPanel
-              sessions={sessions}
-              lang={lang}
-              onClear={clearSessions}
-            />
 
             <section className="rule-t pt-8">
               <h2 className="t-mono text-ink">{L.disclaimerTitle}</h2>
@@ -562,6 +634,11 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
           </div>
         </div>
       </main>
+
+      <PanelSheet
+        panel={panels.find((p) => p.id === openPanel) ?? null}
+        onClose={() => setOpenPanel(null)}
+      />
     </>
   );
 }

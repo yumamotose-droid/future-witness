@@ -779,3 +779,122 @@ body {
     display: none;
   }
 }
+
+/* ─── The rail, and what it opens ─────────────────────────────────────────
+   The conversation is the page. Evidence, futures, the objection and the
+   verification record are one press away and say how much is inside, so
+   choosing not to open one is an informed choice rather than an oversight. */
+
+.rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.rail__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.rail__item:hover,
+.rail__item:focus-visible,
+.rail__item[aria-expanded="true"] {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.rail__hint {
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 1fr min(42rem, 100%);
+}
+
+.sheet__scrim {
+  border: 0;
+  padding: 0;
+  background: color-mix(in oklab, var(--paper-deep) 55%, transparent);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+}
+
+.sheet__body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--paper);
+  border-left: 1px solid var(--rule);
+  box-shadow: -24px 0 60px rgb(0 0 0 / 0.22);
+}
+
+.sheet__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem clamp(1rem, 3vw, 2rem);
+  padding-top: calc(1.1rem + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--rule);
+}
+
+.sheet__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.sheet__close {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-soft);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.sheet__close:hover,
+.sheet__close:focus-visible {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.sheet__scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 3vw, 2rem);
+  /* Clear of the voice console when one is playing. */
+  padding-bottom: 9rem;
+}
+
+/* On a phone the sheet is the screen; a 42rem column beside a scrim is not. */
+@media (max-width: 720px) {
+  .sheet {
+    grid-template-columns: 1fr;
+    grid-template-rows: 4rem 1fr;
+  }
+
+  .sheet__body {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+}
