@@ -58,6 +58,16 @@ export const SPEAK_LIMIT: RateLimitConfig = {
 interface Bucket {
   tokens: number;
   updatedAt: number;
+  /**
+   * The shape this bucket is measured against.
+   *
+   * All three routes share one map, so eviction cannot judge a bucket by the
+   * config of whichever route happens to be asking: a deliberation bucket
+   * (ten, refilling every 30s) read with the speech config (forty, every 4s)
+   * looks full when it is empty.
+   */
+  capacity: number;
+  refillPerMs: number;
 }
 
 const buckets = new Map<string, Bucket>();
@@ -70,30 +80,39 @@ export interface RateLimitResult {
 }
 
 /**
- * Free one slot without forgetting anyone who is currently limited.
+ * Free one slot by dropping whoever is least limited.
  *
  * Evicting the least recently used key looks reasonable and is exploitable:
- * exhaust your own bucket, flood the map with junk keys until your bucket is
- * the oldest, and it comes back empty — a full reset on demand. A bucket that
- * has refilled to capacity carries no information, so only those may be
- * dropped. The scan is bounded because this runs on every request.
+ * exhaust your own bucket, flood the map until it is the oldest, and it comes
+ * back empty — a reset on demand. Evicting the *fullest* bucket inverts that.
+ * A bucket at capacity carries no information, so dropping it costs nothing,
+ * and the flood's own fresh keys are the fullest things in the map, so a
+ * flood evicts itself before it reaches anyone being limited.
+ *
+ * Something is always evicted. Refusing instead would mean a full map locks
+ * out every new reader, which is a cheaper denial of service than the one it
+ * prevents. The scan is bounded because this runs on every request.
  */
 const EVICTION_SCAN = 256;
 
-function makeRoom(now: number, config: RateLimitConfig): boolean {
+function makeRoom(now: number): void {
+  let candidate: string | undefined;
+  let fullest = -1;
   let scanned = 0;
   for (const [key, bucket] of buckets) {
     if (scanned++ >= EVICTION_SCAN) break;
     const refilled = Math.min(
-      config.capacity,
-      bucket.tokens + Math.max(0, now - bucket.updatedAt) * config.refillPerMs,
+      bucket.capacity,
+      bucket.tokens + Math.max(0, now - bucket.updatedAt) * bucket.refillPerMs,
     );
-    if (refilled >= config.capacity) {
-      buckets.delete(key);
-      return true;
+    const fraction = refilled / bucket.capacity;
+    if (fraction > fullest) {
+      fullest = fraction;
+      candidate = key;
     }
+    if (fraction >= 1) break;
   }
-  return false;
+  if (candidate !== undefined) buckets.delete(candidate);
 }
 
 export function consume(
@@ -104,18 +123,15 @@ export function consume(
 ): RateLimitResult {
   const existing = buckets.get(key);
   if (existing) {
-    // Refresh recency so an active caller is never the eviction candidate.
     buckets.delete(key);
-  } else if (buckets.size >= MAX_KEYS && !makeRoom(now, config)) {
-    // Every tracked caller still owes tokens and there is nowhere to put a
-    // new one. Refusing is the safe direction: admitting this key would mean
-    // forgetting someone who is being limited, which is what an attacker
-    // flooding the map is trying to arrange.
-    return { ok: false, remaining: 0, retryAfterSeconds: 60 };
+  } else if (buckets.size >= MAX_KEYS) {
+    makeRoom(now);
   }
   const bucket = existing ?? {
     tokens: config.capacity,
     updatedAt: now,
+    capacity: config.capacity,
+    refillPerMs: config.refillPerMs,
   };
   const elapsed = Math.max(0, now - bucket.updatedAt);
   const tokens = Math.min(
@@ -123,7 +139,7 @@ export function consume(
     bucket.tokens + elapsed * config.refillPerMs,
   );
   if (tokens < cost) {
-    buckets.set(key, { tokens, updatedAt: now });
+    buckets.set(key, { ...bucket, tokens, updatedAt: now });
     const deficit = cost - tokens;
     return {
       ok: false,
@@ -131,7 +147,7 @@ export function consume(
       retryAfterSeconds: Math.ceil(deficit / config.refillPerMs / 1000),
     };
   }
-  buckets.set(key, { tokens: tokens - cost, updatedAt: now });
+  buckets.set(key, { ...bucket, tokens: tokens - cost, updatedAt: now });
   return {
     ok: true,
     remaining: Math.floor(tokens - cost),

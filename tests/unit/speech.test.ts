@@ -93,7 +93,7 @@ describe("synthesize", () => {
 
   it("sends the line verbatim and the direction beside it, never inside it", async () => {
     // Putting the direction in the text made every voice read it aloud.
-    const fetchMock = vi.fn(async () => audioResponse(2));
+    const fetchMock = vi.fn(async (_url: string, _init: RequestInit) => audioResponse(2));
     vi.stubGlobal("fetch", fetchMock);
 
     await synthesize({ text: "ここだけを読む。", agent: "MIRAI" });
@@ -148,12 +148,26 @@ describe("synthesize", () => {
     expect(speechSecondsSpent()).toBeGreaterThan(0);
   });
 
-  it("gives the reservation back when the model fails", async () => {
+  it("keeps charging for a call that may already have been billed", async () => {
+    // The request reached the service; whether it generated audio before
+    // failing is not knowable from here. Refunding in full would let a
+    // failing upstream be used to spend past the ceiling.
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({ ok: false, text: async () => "503 unavailable" }) as unknown as Response),
     );
     await expect(synthesize({ text: "失敗する。", agent: "MIRAI" })).rejects.toBeInstanceOf(
+      SpeechError,
+    );
+    expect(speechSecondsSpent()).toBeGreaterThan(0);
+  });
+
+  it("refunds only when the service refused before generating", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ ok: false, status: 400, text: async () => "400 bad request" }) as unknown as Response),
+    );
+    await expect(synthesize({ text: "拒否される。", agent: "MIRAI" })).rejects.toBeInstanceOf(
       SpeechError,
     );
     expect(speechSecondsSpent()).toBe(0);

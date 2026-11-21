@@ -50,6 +50,7 @@ export class SpeechError extends Error {
       | "too_long"
       | "empty"
       | "budget"
+      | "rejected_before_generating"
       | "upstream"
       | "timeout"
       | "blocked",
@@ -145,14 +146,24 @@ function reserve(estimate: number, now = Date.now()): void {
   inFlight += 1;
 }
 
-/** Replace the reservation with what the call actually produced. */
-function settle(estimate: number, actual: number): void {
-  const difference = actual - estimate;
+/**
+ * Replace the reservation with what the call actually cost.
+ *
+ * A call that produced audio is reconciled against its real duration. A call
+ * that failed after the request was sent keeps its reservation: the service
+ * may have generated and billed before failing, and refunding in full would
+ * turn a flaky upstream into a way to spend past the ceiling. Only a refusal
+ * that happened before generation — a 4xx that is not a quota error — is
+ * given back.
+ *
+ * The per-minute figure is allowed to go negative so an overrun is carried
+ * as debt into the next minute instead of being forgiven.
+ */
+function settle(estimate: number, actual: number, refund: boolean): void {
+  const charged = actual > 0 ? actual : refund ? 0 : estimate;
+  const difference = charged - estimate;
   audioSecondsSpent = Math.max(0, audioSecondsSpent + difference);
-  minuteBucket.seconds = Math.min(
-    SECONDS_PER_MINUTE_CAP,
-    Math.max(0, minuteBucket.seconds - difference),
-  );
+  minuteBucket.seconds = Math.min(SECONDS_PER_MINUTE_CAP, minuteBucket.seconds - difference);
   inFlight = Math.max(0, inFlight - 1);
 }
 
@@ -197,6 +208,11 @@ function mapError(error: unknown): SpeechError {
   const message = error instanceof Error ? error.message : String(error);
   if (/429|RESOURCE_EXHAUSTED|quota/i.test(message)) {
     return new SpeechError(message, "upstream", true);
+  }
+  // A 4xx that is not a quota error was refused before anything was
+  // generated, so nothing was billed and the reservation can be returned.
+  if (/^4\d\d\b/.test(message)) {
+    return new SpeechError(message, "rejected_before_generating", false);
   }
   if (/503|UNAVAILABLE|overloaded/i.test(message)) {
     return new SpeechError(message, "upstream", true);
@@ -297,6 +313,7 @@ export async function synthesize(req: SpeakRequest): Promise<SpeechResult> {
   const estimate = text.length * SECONDS_PER_CHAR;
   reserve(estimate);
   let produced = 0;
+  let refundable = false;
   try {
     let lastError: SpeechError | undefined;
     for (const model of [TTS_MODEL, TTS_FALLBACK_MODEL]) {
@@ -315,13 +332,14 @@ export async function synthesize(req: SpeakRequest): Promise<SpeechResult> {
         return result;
       } catch (error) {
         const mapped = mapError(error);
+        refundable = mapped.code === "rejected_before_generating";
         if (!mapped.retryable) throw mapped;
         lastError = mapped;
       }
     }
     throw lastError ?? new SpeechError("no TTS model answered", "upstream", true);
   } finally {
-    settle(estimate, produced);
+    settle(estimate, produced, refundable);
   }
 }
 
