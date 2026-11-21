@@ -88,6 +88,17 @@ describe("clientKey", () => {
     expect([...keys][0]).toBe("speak:2001:0db8:0000:0000::/64");
   });
 
+  it("does not pool every IPv4-mapped caller into one bucket", () => {
+    // ::ffff:a.b.c.d has four zero groups in front, so a /64 of it is the
+    // same prefix for everyone who arrives in that shape.
+    const one = clientKey(new Headers({ "x-vercel-forwarded-for": "::ffff:198.51.100.7" }), "speak");
+    const two = clientKey(new Headers({ "x-vercel-forwarded-for": "::ffff:203.0.113.9" }), "speak");
+    expect(one).not.toBe(two);
+    expect(one).toBe("speak:198.51.100.7");
+    // And it is the same caller as the plain form of that address.
+    expect(one).toBe(clientKey(new Headers({ "x-vercel-forwarded-for": "198.51.100.7" }), "speak"));
+  });
+
   it("counts an IPv6 caller by routing prefix, not by address", () => {
     // One assignment is a whole network of addresses; tracking each one
     // separately would be tracking nothing.

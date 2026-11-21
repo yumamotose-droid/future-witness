@@ -32,7 +32,13 @@ export default defineConfig({
     // The suite performs many deliberations from one address in a few
     // minutes. This override exists for that and must never be set in
     // production — see SECURITY.md.
-    env: { RATE_LIMIT_CAPACITY: "500" },
+    //
+    // The empty key forces the scripted engine. These tests assert on exact
+    // sentences, which only a scripted run produces: with a key present the
+    // server answers from the model and every such assertion fails for a
+    // reason that has nothing to do with the change under test. Live
+    // behaviour is checked by scripts/validate-runs.mts instead.
+    env: { RATE_LIMIT_CAPACITY: "500", GEMINI_API_KEY: "" },
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,

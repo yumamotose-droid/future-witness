@@ -41,13 +41,19 @@ export function Opening() {
       </div>
 
       <div className="opening__words">
+        {/* Two phrases, each unbreakable, so a narrow screen wraps between
+            them and never inside a word. Leaving it to the browser put the
+            break between 「な」 and 「い。」 in one locale and overflowed the
+            page by 79px in another. */}
         <h1 className="opening__line">
-          未来には、まだ声がない。
+          <span className="opening__phrase">未来には、</span>
+          <span className="opening__phrase">まだ声がない。</span>
           <span className="opening__en">The future has no voice yet.</span>
         </h1>
 
         <p className={`opening__answer${answered ? " is-here" : ""}`}>
-          未来の誰かと、話をしよう。
+          <span className="opening__phrase">未来の誰かと、</span>
+          <span className="opening__phrase">話をしよう。</span>
           <span className="opening__en">Talk with someone who lives there.</span>
         </p>
 

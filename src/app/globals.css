@@ -475,6 +475,11 @@ body {
   gap: clamp(1rem, 3vh, 2rem);
   padding: clamp(1.5rem, 4vh, 3rem) clamp(1.25rem, 5vw, 3rem);
   padding-bottom: calc(clamp(1.5rem, 4vh, 3rem) + env(safe-area-inset-bottom, 0px));
+  /* A full-bleed composition must never scroll sideways. `clip` rather than
+     `hidden` so this does not become a scroll container and change how
+     anything inside it positions. The first version of this layout dropped
+     the rule and a phone-width page gained 79px of horizontal scroll. */
+  overflow-x: clip;
 }
 
 .opening__field {
@@ -497,11 +502,17 @@ body {
 }
 
 /* Japanese does not hyphenate, and a browser will happily break 「ない。」
-   into 「な」 and 「い。」 if allowed to. It is not allowed to: the line may
-   break after a comma, and otherwise the type scales down instead. */
+   into 「な」 and 「い。」 if allowed to. The two display lines are therefore
+   held together — each phrase is an inline-block that wraps as a unit.
+
+   This is deliberately NOT applied to running text. The caveat below once
+   carried the same rule and, under a Japanese locale, Chromium found no
+   break opportunity in a 38-character sentence and laid it out as one
+   469px line inside a 390px screen. No element's box was oversized, so the
+   page simply scrolled sideways with nothing visibly to blame. Body text
+   wraps the ordinary way. */
 .opening__line,
-.opening__answer,
-.opening__caveat {
+.opening__answer {
   word-break: keep-all;
   overflow-wrap: normal;
   line-break: strict;
@@ -517,7 +528,12 @@ body {
 }
 
 .opening__line {
-  font-size: clamp(1.4rem, 4.6vw, 2.5rem);
+  font-size: clamp(1.25rem, 4.4vw, 2.5rem);
+}
+
+/* A phrase wraps as a unit or not at all. */
+.opening__phrase {
+  display: inline-block;
 }
 
 .opening__answer {

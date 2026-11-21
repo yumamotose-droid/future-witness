@@ -270,9 +270,32 @@ function normalizeAddress(raw: string | undefined): string | null {
   if (v4) return v4;
 
   const groups = expandIpv6(value);
-  // Only the routing prefix is kept: one assignment is a whole network of
-  // addresses, so counting them separately would be counting nothing.
-  return groups ? `${groups.slice(0, 4).join(":")}::/64` : null;
+  if (!groups) return null;
+
+  // An IPv4 address written in IPv6 form is still that IPv4 address. Taking
+  // a /64 of ::ffff:a.b.c.d would put every such caller in one bucket, since
+  // the first four groups are zero for all of them — one limit shared by
+  // everyone whose address arrives in this shape.
+  const embedded = embeddedIpv4(groups);
+  if (embedded) return embedded;
+
+  // Otherwise only the routing prefix is kept: one assignment is a whole
+  // network of addresses, so counting them separately would count nothing.
+  return `${groups.slice(0, 4).join(":")}::/64`;
+}
+
+/** The IPv4 inside ::ffff:a.b.c.d or ::a.b.c.d, if that is what this is. */
+function embeddedIpv4(groups: string[]): string | null {
+  const leading = groups.slice(0, 5).every((group) => group === "0000");
+  if (!leading) return null;
+  const marker = groups[5];
+  // ::ffff:a.b.c.d is mapped; ::a.b.c.d is the deprecated compatible form.
+  // Anything else with five zero groups is loopback or unspecified.
+  if (marker !== "ffff" && marker !== "0000") return null;
+  const high = Number.parseInt(groups[6], 16);
+  const low = Number.parseInt(groups[7], 16);
+  if (marker === "0000" && high === 0 && low <= 1) return null;
+  return [high >> 8, high & 0xff, low >> 8, low & 0xff].join(".");
 }
 
 export function clientKey(headers: Headers, scope = "default"): string {
