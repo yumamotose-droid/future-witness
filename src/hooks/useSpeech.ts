@@ -4,12 +4,17 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import type { Lang } from "@/lib/types";
 
 /**
- * Web Speech API wrappers.
+ * Web Speech API wrapper for dictation.
  *
- * Both features are progressive enhancement: the hooks report `supported:
- * false` on browsers without them and the UI hides the controls rather than
- * showing something that silently does nothing. Recognition runs entirely in
- * the user's browser — no audio is sent to this server.
+ * Dictation is progressive enhancement: the hook reports `supported: false`
+ * on browsers without it and the UI hides the control rather than showing
+ * something that silently does nothing. Recognition runs entirely in the
+ * user's browser — no audio is sent to this server.
+ *
+ * Reading aloud used to live here too, through `speechSynthesis`. It was
+ * replaced by `useVoicePlayer`: the browser's built-in voices are a system
+ * setting rather than a casting decision, and this piece needs four voices
+ * that belong to it.
  *
  * Support is read through `useSyncExternalStore` rather than an effect, so the
  * server render and the first client render agree (both "unsupported") and the
@@ -104,43 +109,3 @@ export function useDictation(lang: Lang, onTranscript: (text: string) => void) {
   return { supported, listening, start, stop };
 }
 
-export function useNarration(lang: Lang) {
-  const supported = useFeature(
-    () => typeof window !== "undefined" && "speechSynthesis" in window,
-  );
-  const [speakingId, setSpeakingId] = useState<string | null>(null);
-
-  useEffect(
-    () => () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-    },
-    [],
-  );
-
-  const stop = useCallback(() => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    setSpeakingId(null);
-  }, []);
-
-  const speak = useCallback(
-    (id: string, text: string) => {
-      if (typeof window === "undefined" || !("speechSynthesis" in window))
-        return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang === "ja" ? "ja-JP" : "en-US";
-      utterance.rate = 0.96;
-      utterance.pitch = 1;
-      utterance.onend = () => setSpeakingId(null);
-      utterance.onerror = () => setSpeakingId(null);
-      setSpeakingId(id);
-      window.speechSynthesis.speak(utterance);
-    },
-    [lang],
-  );
-
-  return { supported, speakingId, speak, stop };
-}

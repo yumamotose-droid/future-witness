@@ -614,3 +614,152 @@ body {
     transition: none;
   }
 }
+
+/* ─── The voice console ───────────────────────────────────────────────────
+   Appears only once something has been said. It is a strip along the bottom
+   rather than a modal: the passage being read stays on the page behind it,
+   and a reader can keep scrolling the evidence while a voice is talking. */
+
+.vc {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.75rem, 2.5vw, 1.5rem);
+  align-items: center;
+  padding: 0.875rem clamp(0.875rem, 3vw, 2rem);
+  padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in oklab, var(--paper-deep) 92%, transparent);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--rule);
+}
+
+.vc__form {
+  width: clamp(3rem, 11vw, 4.5rem);
+  height: clamp(3rem, 11vw, 4.5rem);
+}
+
+.vc__body {
+  min-width: 0;
+}
+
+.vc__who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.vc__role {
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.vc__text {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--ink-faint);
+  /* Two lines of transcript: enough to follow, not so much that the console
+     becomes the page. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* The words being said are the words lit. Both come from the same string,
+   so they cannot drift apart. */
+.vc__said.is-now {
+  color: var(--ink);
+}
+
+.vc__waiting,
+.vc__error {
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+}
+
+.vc__error {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+}
+
+.vc__note {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 0.8125rem;
+}
+
+.vc__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.85rem;
+  margin-top: 0.6rem;
+}
+
+.vc__btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  /* A 44px target without a 44px box, so the strip stays thin. */
+  position: relative;
+}
+
+.vc__btn::after {
+  content: "";
+  position: absolute;
+  inset-block: -0.5rem;
+  inset-inline: 0;
+}
+
+.vc__btn:hover:not(:disabled),
+.vc__btn:focus-visible {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.vc__btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.vc__slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.vc__slider input[type="range"] {
+  width: clamp(4rem, 14vw, 7rem);
+  accent-color: var(--gold);
+}
+
+.vc__rate {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Nothing should end up underneath the strip. */
+.has-voice-console {
+  padding-bottom: 9rem;
+}
+
+@media (max-width: 640px) {
+  .vc {
+    grid-template-columns: 1fr;
+  }
+
+  .vc__form {
+    display: none;
+  }
+}

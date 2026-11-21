@@ -9,6 +9,7 @@ import {
 import type { Lang, Scenario, Voice } from "@/lib/types";
 import { t } from "@/lib/i18n/dictionary";
 import { Stamp } from "./Stamp";
+import { useVoice } from "./VoiceConsole";
 
 /**
  * The 2050 testimony.
@@ -105,7 +106,6 @@ export function VoicePanel({
   activeVoice,
   lang,
   runLang,
-  narration,
 }: {
   scenarios: Scenario[];
   voices: Voice[];
@@ -113,14 +113,9 @@ export function VoicePanel({
   lang: Lang;
   /** The language the run was generated in. */
   runLang: Lang | null;
-  narration: {
-    supported: boolean;
-    speakingId: string | null;
-    speak: (id: string, text: string) => void;
-    stop: () => void;
-  };
 }) {
   const L = t(lang);
+  const voicePlayer = useVoice();
   if (voices.length === 0) return null;
 
   return (
@@ -149,7 +144,9 @@ export function VoicePanel({
         {scenarios.map((scenario) => {
           const voice = voices.find((v) => v.scenarioId === scenario.id);
           if (!voice) return null;
-          const speaking = narration.speakingId === scenario.id;
+          // Speaking is now a property of the one player, not of this panel:
+          // whichever passage it is reading is the one that is sounding.
+          const spokenHere = voicePlayer.segments.join("");
           const streaming = activeVoice === scenario.id;
           const needsOther = runLang !== null && runLang !== lang;
           const body =
@@ -190,20 +187,23 @@ export function VoicePanel({
                 {lang === "ja" ? scenario.nameJa : scenario.nameEn}
               </p>
 
-              {narration.supported ? (
-                <button
-                  type="button"
-                  className="btn no-print mt-4 self-start"
-                  onClick={() =>
-                    speaking
-                      ? narration.stop()
-                      : narration.speak(scenario.id, body)
-                  }
-                  disabled={streaming}
-                >
-                  {speaking ? L.stopListening : L.listen}
-                </button>
-              ) : null}
+              <button
+                type="button"
+                className="btn no-print mt-4 self-start"
+                onClick={() => {
+                  const reading =
+                    spokenHere === body.replace(/\s+/g, " ").trim() &&
+                    voicePlayer.status !== "idle";
+                  if (reading) voicePlayer.stop();
+                  else void voicePlayer.play(body, "MIRAI");
+                }}
+                disabled={streaming}
+              >
+                {spokenHere === body.replace(/\s+/g, " ").trim() &&
+                voicePlayer.status !== "idle"
+                  ? L.stopListening
+                  : L.listen}
+              </button>
             </figure>
           );
         })}

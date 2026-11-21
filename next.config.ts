@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data:",
               "font-src 'self' data:",
+              // Speech arrives from /api/speak as bytes and is played from a
+              // blob URL, so it is this origin's own audio by the time the
+              // element loads it. Without this the policy falls back to
+              // default-src, blob: is refused, and every voice silently
+              // fails to play — which is how this line came to be written.
+              "media-src 'self' blob:",
               // The browser speaks only to this origin. No third-party calls.
               "connect-src 'self'",
               "frame-ancestors 'none'",

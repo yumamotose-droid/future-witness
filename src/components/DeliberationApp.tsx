@@ -17,7 +17,8 @@ import type {
 } from "@/lib/types";
 import { t, PHASE_META } from "@/lib/i18n/dictionary";
 import { useDeliberation } from "@/hooks/useDeliberation";
-import { useDictation, useNarration } from "@/hooks/useSpeech";
+import { useDictation } from "@/hooks/useSpeech";
+import { useVoice } from "./VoiceConsole";
 import {
   clearSessions,
   loadSessions,
@@ -60,7 +61,8 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
 
   const { state, start, reset } = useDeliberation();
   const dictation = useDictation(lang, setDraft);
-  const narration = useNarration(lang);
+  // A new question silences whatever is being read from the old one.
+  const voice = useVoice();
   const startedDemo = useRef(false);
   const ledgerRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,7 +70,7 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
     (text: string, topicKey?: string) => {
       const trimmed = text.trim();
       if (trimmed.length < 8) return;
-      narration.stop();
+      voice.stop();
       setQuestion(trimmed);
       setSessionId(
         `fw-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
@@ -79,7 +81,7 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
       setOpenQuestions("");
       void start({ question: trimmed, lang, topicKey });
     },
-    [lang, start, narration],
+    [lang, start, voice],
   );
 
   useEffect(() => {
@@ -445,7 +447,6 @@ export function DeliberationApp({ demo = false }: { demo?: boolean }) {
                     activeVoice={state.activeVoice}
                     lang={lang}
                     runLang={state.runLang}
-                    narration={narration}
                   />
                 ) : null}
 

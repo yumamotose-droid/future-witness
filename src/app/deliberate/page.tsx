@@ -1,5 +1,6 @@
 import { ThemeScript } from "@/components/ThemeScript";
 import { DeliberationApp } from "@/components/DeliberationApp";
+import { VoiceConsole, VoiceProvider } from "@/components/VoiceConsole";
 
 export const metadata = {
   title: "審議 — FUTURE WITNESS",
@@ -15,7 +16,10 @@ export default async function DeliberatePage({
   return (
     <>
       <ThemeScript />
-      <DeliberationApp demo={demo} />
+      <VoiceProvider>
+        <DeliberationApp demo={demo} />
+        <VoiceConsole />
+      </VoiceProvider>
     </>
   );
 }

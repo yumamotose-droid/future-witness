@@ -217,25 +217,62 @@ export function consume(
  * addresses, and tracking them separately would be tracking nothing.
  */
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
-const IPV6_GROUP = /^[0-9a-f]{1,4}$/i;
+const IPV6_GROUP = /^[0-9a-f]{1,4}$/;
+
+function asIpv4(value: string): string | null {
+  const match = IPV4.exec(value);
+  if (!match) return null;
+  return match.slice(1).every((part) => Number(part) <= 255) ? value : null;
+}
+
+/**
+ * Expand an IPv6 address to its eight groups.
+ *
+ * Writing out the groups matters because the result becomes a bucket key:
+ * `2001:db8::1` and `2001:0db8:0:0:0:0:0:1` are one address, and treating
+ * them as two would hand the same caller two limits. The `::` is filled in,
+ * every group is padded, and an IPv4-mapped tail is folded into its two
+ * groups so `::ffff:1.2.3.4` cannot pose as something else.
+ */
+function expandIpv6(value: string): string[] | null {
+  if (!value.includes(":")) return null;
+
+  let body = value;
+  const lastColon = body.lastIndexOf(":");
+  const tail = body.slice(lastColon + 1);
+  if (tail.includes(".")) {
+    const v4 = asIpv4(tail);
+    if (!v4) return null;
+    const [a, b, c, d] = v4.split(".").map(Number);
+    body = `${body.slice(0, lastColon + 1)}${((a << 8) | b).toString(16)}:${((c << 8) | d).toString(16)}`;
+  }
+
+  const halves = body.split("::");
+  if (halves.length > 2) return null;
+
+  const head = halves[0] ? halves[0].split(":") : [];
+  const rear = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+  if (![...head, ...rear].every((group) => IPV6_GROUP.test(group))) return null;
+
+  if (halves.length === 1) {
+    return head.length === 8 ? head.map((g) => g.padStart(4, "0")) : null;
+  }
+  const missing = 8 - head.length - rear.length;
+  if (missing < 1) return null;
+  return [...head, ...Array(missing).fill("0"), ...rear].map((g) => g.padStart(4, "0"));
+}
 
 function normalizeAddress(raw: string | undefined): string | null {
   const value = raw?.trim().toLowerCase();
   if (!value || value.length > 45) return null;
 
-  const v4 = IPV4.exec(value);
-  if (v4) {
-    return v4.slice(1).every((part) => Number(part) <= 255) ? value : null;
-  }
+  const v4 = asIpv4(value);
+  if (v4) return v4;
 
-  if (!value.includes(":")) return null;
-  const parts = value.split("::");
-  if (parts.length > 2) return null;
-  const groups = value.split(/:+/).filter(Boolean);
-  if (groups.length > 8 || !groups.every((group) => IPV6_GROUP.test(group))) return null;
-  // Only the routing prefix is kept; the host half is not an identity.
-  const head = value.split("::")[0].split(":").filter(Boolean).slice(0, 4);
-  return `${head.join(":")}::/64`;
+  const groups = expandIpv6(value);
+  // Only the routing prefix is kept: one assignment is a whole network of
+  // addresses, so counting them separately would be counting nothing.
+  return groups ? `${groups.slice(0, 4).join(":")}::/64` : null;
 }
 
 export function clientKey(headers: Headers, scope = "default"): string {

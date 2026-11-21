@@ -71,6 +71,23 @@ describe("clientKey", () => {
     }
   });
 
+  it("reads one IPv6 address the same however it is spelled", () => {
+    // A shortened form and a written-out form are the same caller; two keys
+    // would be two limits.
+    const spellings = [
+      "2001:db8::1",
+      "2001:0db8:0000:0000:0000:0000:0000:0001",
+      "2001:DB8:0:0:0:0:0:1",
+    ];
+    const keys = new Set(
+      spellings.map((value) =>
+        clientKey(new Headers({ "x-vercel-forwarded-for": value }), "speak"),
+      ),
+    );
+    expect(keys.size).toBe(1);
+    expect([...keys][0]).toBe("speak:2001:0db8:0000:0000::/64");
+  });
+
   it("counts an IPv6 caller by routing prefix, not by address", () => {
     // One assignment is a whole network of addresses; tracking each one
     // separately would be tracking nothing.
@@ -83,7 +100,7 @@ describe("clientKey", () => {
       "speak",
     );
     expect(first).toBe(second);
-    expect(first).toContain("2001:db8:1234:5678");
+    expect(first).toContain("2001:0db8:1234:5678");
   });
 });
 
